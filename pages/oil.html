@@ -192,14 +192,13 @@ select {
 </div>
 
 <script>
-
 function saveMasterRecord() {
     const params = new URLSearchParams(window.location.search);
     const fileID = params.get("id") || "default";
 
     let records = JSON.parse(localStorage.getItem(`oilRecords_${fileID}`)) || [];
 
-    records = []; // reset (table se dubara banega)
+    records = [];
 
     const rows = document.querySelectorAll(".grid .cell");
 
@@ -224,26 +223,17 @@ function saveMasterRecord() {
     localStorage.setItem(`oilRecords_${fileID}`, JSON.stringify(records));
 }
 
-
 let saveTimer;
 function debounceSave(){
     clearTimeout(saveTimer);
     saveTimer = setTimeout(saveToStorage, 400);
 }
 
-
-    // URL se ID aur name lo
 const params = new URLSearchParams(window.location.search);
 const fileID = params.get("id") || "default";
 
-/* ------------------------------
-  0️⃣ Drum aur File ID setup
---------------------------------*/
 let currentDrum = 1;
 
-/* ------------------------------
-  1️⃣ Vehicle Owners
---------------------------------*/
 const ownerData = {
     "Sabir": ["085-TML","695-TLP","766-TLB","930-TLT","2134-JU","7617-JU","7884-JU","9394-JU","9895-JU","9057-JV"],
     "Athar": ["494-TLD","409-TLB","793-TLL","826-TLG","158-TLY"],
@@ -255,9 +245,6 @@ for (let owner in ownerData) {
     ownerData[owner].forEach(v => vehicleOwner[v] = owner);
 }
 
-/* ------------------------------
-  2️⃣ Build Grid
---------------------------------*/
 const grid = document.querySelector(".grid");
 for (let i = 0; i < 16; i++) {
     grid.insertAdjacentHTML("beforeend", `
@@ -273,9 +260,6 @@ for (let i = 0; i < 16; i++) {
     `);
 }
 
-/* ------------------------------
-  3️⃣ Owner Set
---------------------------------*/
 function setOwner(selectBox) {
     const vehicle = selectBox.value;
     const ownerCell = selectBox.parentElement.nextElementSibling;
@@ -286,12 +270,8 @@ function setOwner(selectBox) {
     ownerCell.textContent = owner;
 
     saveToStorage();
-    saveToOwnerHistory(dateInput.value, vehicle, owner, litreInput.value);
 }
 
-/* ------------------------------
-  4️⃣ Total Litre
---------------------------------*/
 function updateTotalLitre() {
     let total = 0;
     document.querySelectorAll(".litre-input").forEach(input => {
@@ -302,11 +282,9 @@ function updateTotalLitre() {
     saveToStorage();
 }
 
-
-/* ------------------------------
-  6️⃣ Save / Load Full Drum
---------------------------------*/
-function getStorageKey() {
+function getCurrentDrumKey() {
+    const params = new URLSearchParams(window.location.search);
+    const fileID = params.get("id") || "default";
     return `oil_${fileID}_Drum${currentDrum}`;
 }
 
@@ -320,64 +298,184 @@ function saveToStorage() {
 
     const rows = document.querySelectorAll(".grid .cell");
     for (let i = 4; i < rows.length; i += 4) {
+        const date = rows[i].querySelector("input").value;
+        const vehicle = rows[i+1].querySelector("select").value;
+        const owner = rows[i+2].textContent;
+        const litre = rows[i+3].querySelector("input").value;
+
         data.rows.push({
-            date: rows[i].querySelector("input").value,
-            vehicle: rows[i+1].querySelector("select").value,
-            owner: rows[i+2].textContent,
-            litre: rows[i+3].querySelector("input").value
+            date: date || "",
+            vehicle: vehicle || "",
+            owner: owner || "",
+            litre: litre || ""
         });
     }
 
-    localStorage.setItem(getStorageKey(), JSON.stringify(data));
+    localStorage.setItem(getCurrentDrumKey(), JSON.stringify(data));
 }
 
 function loadFromStorage() {
-    const data = JSON.parse(localStorage.getItem(getStorageKey()));
-    if (!data) return;
+    clearCurrentPage();
+    
+    const data = JSON.parse(localStorage.getItem(getCurrentDrumKey()));
+    if (!data) {
+        console.log(`No data found for Drum ${currentDrum}`);
+        return;
+    }
 
-    document.getElementById("memoInput").value = data.memo;
-    document.getElementById("totalLitreBox").value = data.total;
+    document.getElementById("memoInput").value = data.memo || "";
+    document.getElementById("totalLitreBox").value = data.total || "0";
+    document.getElementById("drumNumber").textContent = currentDrum;
 
     const rows = document.querySelectorAll(".grid .cell");
-    for (let i = 0; i < data.rows.length; i++) {
-        rows[4+i*4].querySelector("input").value = data.rows[i].date;
-        rows[5+i*4].querySelector("select").value = data.rows[i].vehicle;
-        rows[6+i*4].textContent = data.rows[i].owner;
-        rows[7+i*4].querySelector("input").value = data.rows[i].litre;
+    const dataRows = data.rows || [];
+    
+    for (let i = 0; i < dataRows.length && i < 16; i++) {
+        rows[4 + i*4].querySelector("input").value = dataRows[i].date || "";
+        rows[5 + i*4].querySelector("select").value = dataRows[i].vehicle || "";
+        rows[6 + i*4].textContent = dataRows[i].owner || "";
+        rows[7 + i*4].querySelector("input").value = dataRows[i].litre || "";
     }
+    
+    console.log(`Loaded Drum ${currentDrum} data`);
 }
 
-/* ------------------------------
-  7️⃣ Drum Switching
---------------------------------*/
-function openDrum(num) {
-    currentDrum = num;
-    document.getElementById("drumNumber").textContent = num;
-    loadFromStorage();
+function clearCurrentPage() {
+    const rows = document.querySelectorAll(".grid .cell");
+    
+    for (let i = 4; i < rows.length; i++) {
+        if (i % 4 === 0) {
+            rows[i].querySelector("input").value = "";
+        } else if (i % 4 === 1) {
+            rows[i].querySelector("select").value = "";
+        } else if (i % 4 === 2) {
+            rows[i].textContent = "";
+        } else if (i % 4 === 3) {
+            rows[i].querySelector("input").value = "";
+        }
+    }
+    
+    document.getElementById("memoInput").value = "";
+    document.getElementById("totalLitreBox").value = "0";
 }
 
-/* ------------------------------
-  8️⃣ 3 Dots Menu Toggle
---------------------------------*/
+// ==================== DRUM MENU FIX ====================
 const menuDots = document.getElementById("menuDots");
 const drumPopup = document.getElementById("drumPopup");
 
-menuDots.addEventListener("click", () => {
-    drumPopup.style.display = drumPopup.style.display === "block" ? "none" : "block";
+// CLOSE MENU FUNCTION
+function closeDrumMenu() {
+    drumPopup.style.display = "none";
+}
+
+// OPEN DRUM FUNCTION - FIXED
+function openDrum(num) {
+    closeDrumMenu(); // Pehle menu close
+    
+    // Save current drum
+    saveToStorage();
+    
+    // Switch drum
+    currentDrum = num;
+    document.getElementById("drumNumber").textContent = num;
+    
+    // Load new drum data
+    loadFromStorage();
+    
+    // Sync to owner master
+    syncToOwnerMaster();
+}
+
+// Menu dots click handler
+menuDots.addEventListener("click", function(e) {
+    e.stopPropagation();
+    
+    if (drumPopup.style.display === "block") {
+        drumPopup.style.display = "none";
+    } else {
+        drumPopup.style.display = "block";
+    }
 });
 
-/* ------------------------------
-  9️⃣ Auto-save input changes
---------------------------------*/
-document.querySelectorAll("input, select").forEach(el => {
-    el.addEventListener("input", debounceSave);
-
+// Click outside to close
+document.addEventListener("click", function(e) {
+    if (!e.target.closest(".menu-dots") && !e.target.closest(".drum-popup")) {
+        closeDrumMenu();
+    }
 });
 
-/* ------------------------------
- 🔟 Load data on page load
---------------------------------*/
-window.addEventListener("DOMContentLoaded", loadFromStorage);
+// ESC key to close
+document.addEventListener("keydown", function(e) {
+    if (e.key === "Escape") {
+        closeDrumMenu();
+    }
+});
+
+// ==================== OWNER SYNC SYSTEM ====================
+function getOwnerMasterKey() {
+    const params = new URLSearchParams(window.location.search);
+    const fileID = params.get("id") || "default";
+    return `oilOwnerMaster_${fileID}`;
+}
+
+function syncToOwnerMaster() {
+    const masterKey = getOwnerMasterKey();
+    let allData = [];
+    
+    for (let drumNum = 1; drumNum <= 10; drumNum++) {
+        const drumKey = `oil_${fileID}_Drum${drumNum}`;
+        const drumData = JSON.parse(localStorage.getItem(drumKey));
+        
+        if (drumData && drumData.rows) {
+            drumData.rows.forEach(row => {
+                if (row.date || row.vehicle || row.owner || row.litre) {
+                    allData.push({
+                        memo: drumData.memo || "",
+                        drum: drumNum,
+                        date: row.date || "",
+                        vehicle: row.vehicle || "",
+                        owner: row.owner || "",
+                        litre: parseFloat(row.litre) || 0
+                    });
+                }
+            });
+        }
+    }
+    
+    localStorage.setItem(masterKey, JSON.stringify(allData));
+}
+
+// ==================== SETUP AUTO-SYNC ====================
+function setupRealTimeSync() {
+    document.querySelectorAll('input, select').forEach(element => {
+        element.addEventListener('input', () => {
+            setTimeout(syncToOwnerMaster, 300);
+        });
+        element.addEventListener('change', () => {
+            setTimeout(syncToOwnerMaster, 300);
+        });
+    });
+    
+    setTimeout(syncToOwnerMaster, 1000);
+}
+
+// ==================== PAGE LOAD ====================
+window.addEventListener('DOMContentLoaded', function() {
+    // Menu close on load
+    closeDrumMenu();
+    
+    // Load data
+    loadFromStorage();
+    updateTotalLitre();
+    setupRealTimeSync();
+    
+    // Auto-save on input
+    document.querySelectorAll("input, select").forEach(el => {
+        el.addEventListener("input", debounceSave);
+    });
+});
+
+// Remove duplicate saveOwnerMaster function call
 </script>
 
 </body>

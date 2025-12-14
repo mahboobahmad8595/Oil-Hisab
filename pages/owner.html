@@ -253,14 +253,17 @@ function toggleDropdown(){
 
 // PAGE switch + auto owner fill
 function openPage(id, ownerName){
-    document.getElementById("dropdownMenu").style.display = "none"; // close dropdown
+    document.getElementById("dropdownMenu").style.display = "none";
 
     document.querySelectorAll(".page").forEach(p => p.style.display = "none");
-
     document.getElementById(id).style.display = "block";
 
     document.getElementById(`owner-${id}`).value = ownerName;
+
+    // ✅ YAHAN CALL SAHI HAI
+    loadOwnerFromOil(ownerName);
 }
+
 
 // close dropdown when clicking outside
 window.onclick = function(e){
@@ -283,6 +286,152 @@ document.querySelectorAll(".table-grid").forEach(table => {
 
 // default page
 openPage("athar","Athar");
+
+// REAL-TIME OWNER DATA LOADING
+function loadOwnerFromOil(ownerName) {
+    const params = new URLSearchParams(window.location.search);
+    const fileID = params.get("id") || "default";
+    const masterKey = `oilOwnerMaster_${fileID}`;
+    
+    const masterData = JSON.parse(localStorage.getItem(masterKey)) || [];
+    const page = document.getElementById(ownerName.toLowerCase());
+    
+    if (!page) {
+        console.error("Page not found for owner:", ownerName);
+        return;
+    }
+    
+    const table = page.querySelector(".table-grid");
+    
+    // Clear existing rows (keep header row only)
+    const headerCells = table.querySelectorAll('.cell');
+    for (let i = 5; i < headerCells.length; i++) {
+        headerCells[i].remove();
+    }
+    
+    // Filter data for this owner
+    const ownerData = masterData.filter(record => 
+        record.owner && record.owner.toLowerCase() === ownerName.toLowerCase()
+    );
+    
+    let totalLitre = 0;
+    
+    // Add data rows
+    ownerData.forEach(record => {
+        totalLitre += parseFloat(record.litre) || 0;
+        
+        // Create row cells
+        const values = [
+            record.memo || "",
+            record.drum,
+            record.date,
+            record.vehicle,
+            record.litre
+        ];
+        
+        values.forEach(value => {
+            const cell = document.createElement("div");
+            cell.className = "cell input-cell";
+            cell.textContent = value;
+            table.appendChild(cell);
+        });
+    });
+    
+    // Update top grid
+    const topInputs = page.querySelectorAll(".top-grid input");
+    if (topInputs[0]) topInputs[0].value = ownerName; // Owner name
+    if (topInputs[3]) topInputs[3].value = totalLitre.toFixed(2); // Total litre
+    
+    // Show message if no data
+    if (ownerData.length === 0) {
+        const messageCell = document.createElement("div");
+        messageCell.style.gridColumn = "1 / span 5";
+        messageCell.style.textAlign = "center";
+        messageCell.style.padding = "15px";
+        messageCell.style.color = "#888";
+        messageCell.textContent = `No oil records found for ${ownerName}`;
+        table.appendChild(messageCell);
+    }
+    
+    console.log(`Loaded ${ownerData.length} records for ${ownerName}, Total: ${totalLitre}L`);
+}
+
+// REAL-TIME LISTENER - Auto refresh when oil data changes
+function setupRealTimeListener() {
+    const params = new URLSearchParams(window.location.search);
+    const fileID = params.get("id") || "default";
+    const masterKey = `oilOwnerMaster_${fileID}`;
+    
+    // Listen for storage changes
+    window.addEventListener('storage', function(e) {
+        if (e.key === masterKey) {
+            console.log("Real-time update detected!");
+            
+            // Get current active owner page
+            const activePages = document.querySelectorAll('.page');
+            let activeOwner = null;
+            
+            activePages.forEach(page => {
+                if (page.style.display === 'block') {
+                    activeOwner = page.id; // athar, sabir, etc.
+                }
+            });
+            
+            // Reload data for active owner
+            if (activeOwner) {
+                const ownerName = activeOwner.charAt(0).toUpperCase() + activeOwner.slice(1);
+                loadOwnerFromOil(ownerName);
+            }
+        }
+    });
+    
+    // Also check every 2 seconds (for same-tab changes)
+    setInterval(() => {
+        const activePages = document.querySelectorAll('.page');
+        let activeOwner = null;
+        
+        activePages.forEach(page => {
+            if (page.style.display === 'block') {
+                activeOwner = page.id;
+            }
+        });
+        
+        if (activeOwner) {
+            const ownerName = activeOwner.charAt(0).toUpperCase() + activeOwner.slice(1);
+            loadOwnerFromOil(ownerName);
+        }
+    }, 2000);
+}
+
+// Initialize when page loads
+window.addEventListener('DOMContentLoaded', function() {
+    setupRealTimeListener();
+    
+    // Load initial data for current owner
+    setTimeout(() => {
+        const activePages = document.querySelectorAll('.page');
+        activePages.forEach(page => {
+            if (page.style.display === 'block') {
+                const ownerName = page.id.charAt(0).toUpperCase() + page.id.slice(1);
+                loadOwnerFromOil(ownerName);
+            }
+        });
+    }, 500);
+});
+
+// Also update the openPage function to load data
+const originalOpenPage = window.openPage;
+window.openPage = function(id, ownerName) {
+    if (originalOpenPage) originalOpenPage(id, ownerName);
+    
+    // Load data for this owner
+    setTimeout(() => {
+        loadOwnerFromOil(ownerName);
+    }, 100);
+};
+
+
+
 </script>
 
 </body>
