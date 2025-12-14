@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oil Hisab</title>
+
+<style>
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f5f5;
+    padding: 30px;
+}
+
+.container { display: flex; gap: 20px; flex-wrap: wrap; }
+
+.box-size { width: 160px; height: 180px; }
+
+.add-new {
+    border: 2px dashed #bbb;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: 0.2s;
+    background: white;
+}
+.add-new:hover { border-color: #4CAF50; }
+
+.plus-icon { font-size: 45px; color: #4CAF50; font-weight: bold; }
+
+.cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    transition: 0.2s;
+    cursor: pointer;
+}
+.card:hover { transform: scale(1.03); }
+
+.card-title { font-size: 18px; font-weight: bold; padding: 5px 0; }
+
+.menu-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 3px;
+}
+
+.menu-popup {
+    position: absolute;
+    bottom: 35px;
+    right: 5px;
+    background: white;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    border-radius: 8px;
+    padding: 5px 0;
+    display: none;
+    width: 120px;
+    z-index: 10;
+}
+.menu-item { padding: 8px 12px; cursor: pointer; }
+.menu-item:hover { background: #f0f0f0; }
+
+.rename-input { width: 100%; font-size: 17px; padding: 5px; }
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="add-new box-size" id="addNewBtn">
+        <div class="plus-icon">+</div>
+        <p>Add New</p>
+    </div>
+
+    <div class="cards" id="cardsContainer"></div>
+
+</div>
+
+<script>
+const addNewBtn = document.getElementById("addNewBtn");
+const cardsContainer = document.getElementById("cardsContainer");
+
+window.onload = loadCardsFromStorage;
+
+// ADD NEW CARD
+addNewBtn.addEventListener("click", () => {
+    let id = Date.now();
+    createCard(id, "New File");
+    saveCardsToStorage();
+});
+
+// CREATE CARD
+function createCard(id, titleText) {
+    const card = document.createElement("div");
+    card.className = "card box-size";
+    card.setAttribute("data-id", id);
+
+    const title = document.createElement("div");
+    title.className = "card-title";
+    title.textContent = titleText;
+
+    // Card click → Open files
+    card.addEventListener("click", (e) => {
+        if (e.target.classList.contains("menu-btn") ||
+            e.target.classList.contains("menu-item")) return;
+
+        const cardName = encodeURIComponent(card.querySelector(".card-title").textContent);
+
+        // Agar card title 'Owner' ho → owner.html
+        if (titleText.toLowerCase() === "owner") {
+            window.location.href = `pages/owner.html?id=${id}&name=${cardName}`;
+        } 
+        // Agar card title 'Oil' ho → oil.html
+        else if (titleText.toLowerCase() === "oil") {
+            window.location.href = `pages/oil.html?id=${id}&name=${cardName}`;
+        } 
+        // Default → dashboard.html
+        else {
+            window.location.href = `pages/dashboard.html?id=${id}&name=${cardName}`;
+        }
+    });
+
+    // MENU BUTTON
+    const menuBtn = document.createElement("div");
+    menuBtn.className = "menu-btn";
+    menuBtn.textContent = "⋮";
+
+    const menuPopup = document.createElement("div");
+    menuPopup.className = "menu-popup";
+
+    const renameOption = document.createElement("div");
+    renameOption.className = "menu-item";
+    renameOption.textContent = "Rename";
+
+    renameOption.addEventListener("click", (e) => {
+        e.stopPropagation();
+        menuPopup.style.display = "none";
+
+        const latestTitle = card.querySelector(".card-title");
+        renameCard(latestTitle, id);
+    });
+
+    const deleteOption = document.createElement("div");
+    deleteOption.className = "menu-item";
+    deleteOption.textContent = "Delete";
+
+    deleteOption.addEventListener("click", () => {
+        card.remove();
+        saveCardsToStorage();
+    });
+
+    menuPopup.appendChild(renameOption);
+    menuPopup.appendChild(deleteOption);
+
+    menuBtn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        menuPopup.style.display =
+            menuPopup.style.display === "block" ? "none" : "block";
+    });
+
+    document.addEventListener("click", () => menuPopup.style.display = "none");
+
+    card.appendChild(title);
+    card.appendChild(menuBtn);
+    card.appendChild(menuPopup);
+
+    cardsContainer.appendChild(card);
+}
+
+// RENAME
+function renameCard(titleElement, id) {
+    const currentName = titleElement.textContent;
+
+    const input = document.createElement("input");
+    input.type = "text";
+    input.value = currentName;
+    input.className = "rename-input";
+
+    titleElement.replaceWith(input);
+    input.focus();
+
+    input.addEventListener("blur", () => restoreTitle(input, id));
+    input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") restoreTitle(input, id);
+    });
+}
+
+function restoreTitle(input, id) {
+    const newTitle = input.value.trim() || "New File";
+
+    const title = document.createElement("div");
+    title.className = "card-title";
+    title.textContent = newTitle;
+
+    title.addEventListener("click", () => {
+        const cardName = encodeURIComponent(newTitle);
+        if (newTitle.toLowerCase() === "owner") {
+            window.location.href = `pages/owner.html?id=${id}&name=${cardName}`;
+        } else if (newTitle.toLowerCase() === "oil") {
+            window.location.href = `pages/oil.html?id=${id}&name=${cardName}`;
+        } else {
+            window.location.href = `pages/dashboard.html?id=${id}&name=${cardName}`;
+        }
+    });
+
+    input.replaceWith(title);
+
+    saveCardsToStorage();
+}
+
+// SAVE TO STORAGE
+function saveCardsToStorage() {
+    const cards = [];
+    document.querySelectorAll(".card").forEach(card => {
+        const id = card.getAttribute("data-id");
+        const title = card.querySelector(".card-title").textContent;
+        cards.push({ id, title });
+    });
+    localStorage.setItem("cards", JSON.stringify(cards));
+}
+
+// LOAD CARDS
+function loadCardsFromStorage() {
+    const saved = JSON.parse(localStorage.getItem("cards")) || [];
+    saved.forEach(card => createCard(card.id, card.title));
+}
+</script>
+
+</body>
+</html>

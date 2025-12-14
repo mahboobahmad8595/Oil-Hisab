@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title> <!-- Ye ab JS se file name set hoga -->
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* HEADER */
+        header {
+            width: 100%;
+            padding: 18px 0;
+            background: #222;
+            color: white;
+            text-align: center;
+            font-size: 26px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 10;
+        }
+
+        /* FOOTER */
+        footer {
+            width: 100%;
+            padding: 15px 0;
+            background: #222;
+            color: #ddd;
+            text-align: center;
+            font-size: 18px;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            box-shadow: 0 -3px 10px rgba(0,0,0,0.3);
+        }
+
+        /* BODY AREA */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #efefef, #ffffff);
+            font-family: 'Poppins', Arial, sans-serif;
+
+            padding-top: 90px;   /* Header height adjust */
+            padding-bottom: 70px; /* Footer height adjust */
+            box-sizing: border-box;
+        }
+
+        .container {
+            display: flex;
+            gap: 45px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 180px); 
+        }
+
+        /* CARD */
+        .card {
+            width: 240px;
+            height: 210px;
+            background: #ffffffc9;
+            border-radius: 22px;
+
+            box-shadow:
+                0px 10px 25px rgba(0, 0, 0, 0.18),
+                0px 0px 50px rgba(150, 150, 150, 0.18);
+
+            backdrop-filter: blur(8px);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            cursor: pointer;
+            transition: 0.4s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-12px) scale(1.06);
+            box-shadow:
+                0px 15px 40px rgba(0,0,0,0.28),
+                0px 0px 60px rgba(120,120,120,0.25);
+        }
+
+        .icon {
+            font-size: 70px;
+            margin-bottom: 12px;
+            filter: drop-shadow(0px 4px 5px rgba(0,0,0,0.25));
+        }
+
+        .text {
+            font-size: 26px;
+            font-weight: 700;
+            color: #333;
+            letter-spacing: 1px;
+        }
+
+        /* MOBILE */
+        @media (max-width: 600px) {
+            .card {
+                width: 85%;
+                height: 190px;
+            }
+
+            .icon { font-size: 60px; }
+            .text { font-size: 24px; }
+
+            header { font-size: 22px; }
+            footer { font-size: 16px; }
+
+            .container {
+                height: calc(100vh - 160px);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<header>
+    🌟 Oil Hisab
+</header>
+
+<!-- CARDS CENTERED -->
+<div class="container">
+    <div class="card" id="mainCard">
+        <div class="icon">🛢️</div>
+        <div class="text">Main</div>
+    </div>
+
+    <div class="card" id="ownersCard">
+        <div class="icon">👥</div>
+        <div class="text">Owners</div>
+    </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+    © 2025 Owner Athar — All Rights Reserved
+</footer>
+
+<script>
+    // URL se file name leke <title> set karo
+    const urlParams = new URLSearchParams(window.location.search);
+    const fileName = decodeURIComponent(urlParams.get("name")) || "Dashboard";
+    document.title = fileName;
+
+    // Card click actions
+    document.getElementById("mainCard").addEventListener("click", () => {
+        window.location.href = `oil.html?id=${urlParams.get("id")}&name=${encodeURIComponent(fileName)}`;
+    });
+
+    document.getElementById("ownersCard").addEventListener("click", () => {
+        window.location.href = `owner.html?id=${urlParams.get("id")}&name=${encodeURIComponent(fileName)}`;
+    });
+</script>
+
+</body>
+</html>

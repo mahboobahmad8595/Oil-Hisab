@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oil Hisab</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #f9f9f9;
+    overflow: auto;
+}
+
+.bill-container {
+    width: 95vw;
+    max-width: 600px;
+    min-height: 95vh;
+    display: flex;
+    flex-direction: column;
+    border: 2px solid #000;
+    background: #fff;
+    padding: 10px;
+    position: relative; /* For dots menu */
+}
+
+/* ⭐ 3 DOT MENU */
+.menu-dots {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+    font-size: 22px;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 5px;
+}
+.menu-dots:hover { background: #f0f0f0; }
+
+/* ⭐ Popup for Drums */
+.drum-popup {
+    position: absolute;
+    top: 35px;
+    right: 10px;
+    width: 140px;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    display: none;
+    z-index: 50;
+}
+
+.drum-item {
+    padding: 10px;
+    font-size: 14px;
+    cursor: pointer;
+}
+.drum-item:hover { background: #ededed; }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    font-weight: bold;
+    gap: 5px;
+    flex-shrink: 0;
+    margin-bottom: 5px;
+    align-items: flex-end;
+}
+
+.header div {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 4px;
+}
+
+.header input {
+    border: none;
+    border-bottom: 2px solid #000;
+    outline: none;
+    font-size: 14px;
+    width: 100%;
+    padding: 2px 0; 
+}
+
+/* ⭐ Drum number underline */
+#drumNumber {
+    font-weight: bold;
+    font-size: 16px;
+    margin-top: 2px;
+    border-bottom: 2px solid #000;
+    width: 100%; /* Full width underline */
+    text-align: left; /* Left align */
+    padding-bottom: 2px;
+}
+
+#totalLitreBox {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.grid {
+    display: grid;
+    flex-grow: 1;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: repeat(17, 1fr);
+    border-top: 2px solid #000;
+    border-left: 2px solid #000;
+}
+
+.cell {
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    padding: 0 2px;
+}
+
+input.date-input,
+input.litre-input,
+select {
+    width: 100%;
+    height: 100%;
+    border: none;
+    background: transparent;
+    font-size: 12px;
+    outline: none;
+    padding: 0 2px;
+}
+
+/* ⭐ Restore original dd/mm/yyyy hide */
+.date-input:invalid { color: transparent; }
+.date-input:not(:invalid) { color: black; }
+
+/* Responsive font size */
+@media (max-width: 1024px) { .cell input, .cell select { font-size: 11px; } }
+@media (max-width: 768px)  { .cell input, .cell select { font-size: 10px; } }
+@media (max-width: 480px)  { .cell input, .cell select { font-size: 9px; } }
+</style>
+</head>
+<body>
+
+<div class="bill-container">
+
+    <!-- ⭐ 3 DOTS -->
+    <div class="menu-dots" id="menuDots">⋮</div>
+
+    <!-- ⭐ Popup Drum Menu -->
+    <div class="drum-popup" id="drumPopup">
+        <div class="drum-item" onclick="openDrum(1)">Drum 1</div>
+        <div class="drum-item" onclick="openDrum(2)">Drum 2</div>
+        <div class="drum-item" onclick="openDrum(3)">Drum 3</div>
+        <div class="drum-item" onclick="openDrum(4)">Drum 4</div>
+        <div class="drum-item" onclick="openDrum(5)">Drum 5</div>
+        <div class="drum-item" onclick="openDrum(6)">Drum 6</div>
+        <div class="drum-item" onclick="openDrum(7)">Drum 7</div>
+        <div class="drum-item" onclick="openDrum(8)">Drum 8</div>
+        <div class="drum-item" onclick="openDrum(9)">Drum 9</div>
+        <div class="drum-item" onclick="openDrum(10)">Drum 10</div>
+    </div>
+
+    <div class="header">
+        <div>
+            <span>Memo:</span>
+            <input id="memoInput" type="text">
+        </div>
+        <div>
+            <span>Drum:</span>
+            <input id="drumInput" type="text" readonly style="display:none;">
+            <span id="drumNumber">1</span>
+        </div>
+        <div>
+            <span>Total Litre:</span>
+            <input id="totalLitreBox" type="text" readonly>
+        </div>
+    </div>
+
+    <div class="grid">
+        <div class="cell"><b>Date</b></div>
+        <div class="cell"><b>Vehicle</b></div>
+        <div class="cell"><b>Owner</b></div>
+        <div class="cell"><b>Litre</b></div>
+    </div>
+
+</div>
+
+<script>
+
+function saveMasterRecord() {
+    const params = new URLSearchParams(window.location.search);
+    const fileID = params.get("id") || "default";
+
+    let records = JSON.parse(localStorage.getItem(`oilRecords_${fileID}`)) || [];
+
+    records = []; // reset (table se dubara banega)
+
+    const rows = document.querySelectorAll(".grid .cell");
+
+    for (let i = 4; i < rows.length; i += 4) {
+        const date = rows[i].querySelector("input").value;
+        const vehicle = rows[i+1].querySelector("select").value;
+        const owner = rows[i+2].textContent;
+        const litre = rows[i+3].querySelector("input").value;
+
+        if (!date || !vehicle || !owner || !litre) continue;
+
+        records.push({
+            date,
+            vehicle,
+            owner,
+            litre: Number(litre),
+            drum: currentDrum,
+            memo: document.getElementById("memoInput").value
+        });
+    }
+
+    localStorage.setItem(`oilRecords_${fileID}`, JSON.stringify(records));
+}
+
+
+let saveTimer;
+function debounceSave(){
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(saveToStorage, 400);
+}
+
+
+    // URL se ID aur name lo
+const params = new URLSearchParams(window.location.search);
+const fileID = params.get("id") || "default";
+
+/* ------------------------------
+  0️⃣ Drum aur File ID setup
+--------------------------------*/
+let currentDrum = 1;
+
+/* ------------------------------
+  1️⃣ Vehicle Owners
+--------------------------------*/
+const ownerData = {
+    "Sabir": ["085-TML","695-TLP","766-TLB","930-TLT","2134-JU","7617-JU","7884-JU","9394-JU","9895-JU","9057-JV"],
+    "Athar": ["494-TLD","409-TLB","793-TLL","826-TLG","158-TLY"],
+    "Faisal": ["348-SPA","948-TMK","3820-LES"],
+    "Tahir": ["365-TLT","998-TLH","3606-JU"]
+};
+const vehicleOwner = {};
+for (let owner in ownerData) {
+    ownerData[owner].forEach(v => vehicleOwner[v] = owner);
+}
+
+/* ------------------------------
+  2️⃣ Build Grid
+--------------------------------*/
+const grid = document.querySelector(".grid");
+for (let i = 0; i < 16; i++) {
+    grid.insertAdjacentHTML("beforeend", `
+        <div class="cell"><input type="date" class="date-input" required></div>
+        <div class="cell">
+            <select onchange="setOwner(this)">
+                <option value="" disabled selected hidden></option>
+                ${Object.keys(vehicleOwner).map(v => `<option>${v}</option>`).join("")}
+            </select>
+        </div>
+        <div class="cell owner"></div>
+        <div class="cell"><input type="number" class="litre-input" min="0" oninput="updateTotalLitre()"></div>
+    `);
+}
+
+/* ------------------------------
+  3️⃣ Owner Set
+--------------------------------*/
+function setOwner(selectBox) {
+    const vehicle = selectBox.value;
+    const ownerCell = selectBox.parentElement.nextElementSibling;
+    const litreInput = ownerCell.nextElementSibling.querySelector("input");
+    const dateInput = selectBox.parentElement.previousElementSibling.querySelector("input");
+
+    const owner = vehicleOwner[vehicle] || "";
+    ownerCell.textContent = owner;
+
+    saveToStorage();
+    saveToOwnerHistory(dateInput.value, vehicle, owner, litreInput.value);
+}
+
+/* ------------------------------
+  4️⃣ Total Litre
+--------------------------------*/
+function updateTotalLitre() {
+    let total = 0;
+    document.querySelectorAll(".litre-input").forEach(input => {
+        const val = parseFloat(input.value);
+        if (!isNaN(val)) total += val;
+    });
+    document.getElementById("totalLitreBox").value = total;
+    saveToStorage();
+}
+
+
+/* ------------------------------
+  6️⃣ Save / Load Full Drum
+--------------------------------*/
+function getStorageKey() {
+    return `oil_${fileID}_Drum${currentDrum}`;
+}
+
+function saveToStorage() {
+    const data = {
+        memo: document.getElementById("memoInput").value,
+        drum: currentDrum,
+        total: document.getElementById("totalLitreBox").value,
+        rows: []
+    };
+
+    const rows = document.querySelectorAll(".grid .cell");
+    for (let i = 4; i < rows.length; i += 4) {
+        data.rows.push({
+            date: rows[i].querySelector("input").value,
+            vehicle: rows[i+1].querySelector("select").value,
+            owner: rows[i+2].textContent,
+            litre: rows[i+3].querySelector("input").value
+        });
+    }
+
+    localStorage.setItem(getStorageKey(), JSON.stringify(data));
+}
+
+function loadFromStorage() {
+    const data = JSON.parse(localStorage.getItem(getStorageKey()));
+    if (!data) return;
+
+    document.getElementById("memoInput").value = data.memo;
+    document.getElementById("totalLitreBox").value = data.total;
+
+    const rows = document.querySelectorAll(".grid .cell");
+    for (let i = 0; i < data.rows.length; i++) {
+        rows[4+i*4].querySelector("input").value = data.rows[i].date;
+        rows[5+i*4].querySelector("select").value = data.rows[i].vehicle;
+        rows[6+i*4].textContent = data.rows[i].owner;
+        rows[7+i*4].querySelector("input").value = data.rows[i].litre;
+    }
+}
+
+/* ------------------------------
+  7️⃣ Drum Switching
+--------------------------------*/
+function openDrum(num) {
+    currentDrum = num;
+    document.getElementById("drumNumber").textContent = num;
+    loadFromStorage();
+}
+
+/* ------------------------------
+  8️⃣ 3 Dots Menu Toggle
+--------------------------------*/
+const menuDots = document.getElementById("menuDots");
+const drumPopup = document.getElementById("drumPopup");
+
+menuDots.addEventListener("click", () => {
+    drumPopup.style.display = drumPopup.style.display === "block" ? "none" : "block";
+});
+
+/* ------------------------------
+  9️⃣ Auto-save input changes
+--------------------------------*/
+document.querySelectorAll("input, select").forEach(el => {
+    el.addEventListener("input", debounceSave);
+
+});
+
+/* ------------------------------
+ 🔟 Load data on page load
+--------------------------------*/
+window.addEventListener("DOMContentLoaded", loadFromStorage);
+</script>
+
+</body>
+</html>
