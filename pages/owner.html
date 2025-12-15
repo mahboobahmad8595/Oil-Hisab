@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+ <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Owner</title>
+</body>
+</html>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -24,8 +27,39 @@ body{
     position:relative;
 }
 
+/* ========== COMPLETE TABLE FIX ========== */
+.table-container {
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+    position: relative;
+}
+
+/* Table wrapper for sticky header */
+.table-wrapper {
+    position: relative;
+}
+
+/* Main table grid */
+.table-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    width: 100%;
+}
+
+/* HEADER FIX - Separate styling */
+.header-row {
+    display: contents;
+}
+
 /* MENU */
-.dropdown{ position:absolute; top:10px; right:10px; }
+.dropdown { 
+    position: absolute; 
+    top: 10px; 
+    right: 10px; 
+    z-index: 1000;
+}
 .dot{
     width:4px; 
     height:4px;
@@ -42,14 +76,24 @@ body{
     top:15px;
     background:#fff;
     border:1px solid #000;
-    z-index:10;
+    z-index:1001;
     font-size:12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    min-width: 120px;
 }
-.dropdown-content div{ padding:6px 10px; cursor:pointer; }
+.dropdown-content div{ 
+    padding:8px 12px; 
+    cursor:pointer; 
+    white-space: nowrap;
+}
 .dropdown-content div:hover{ background:#f0f0f0; }
 
 /* PAGES */
-.page { display:none; }
+.page { 
+    display:none; 
+    position: relative; 
+    padding-bottom: 20px;
+}
 
 /* TOP INPUTS */
 .top-grid{
@@ -80,13 +124,95 @@ body{
 }
 
 /* TABLE */
-.table-grid{
-    display:grid;
+.table-grid {
+    display: grid;
     grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(17, 26px);
-    border-left:2px solid #000;
-    border-top:2px solid #000;
+    border-left: 2px solid #000;
+    border-top: 2px solid #000;
+    width: 100%;
 }
+
+.table-grid .cell {
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12.5px;
+    font-weight: bold;
+    min-height: 30px;
+    padding: 5px 2px;
+    word-break: break-word;
+}
+
+.input-cell {
+    background: #fff;
+}
+
+.table-grid .cell:nth-child(-n+5) {
+    background: #f0f0f0;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    border: 2px solid #000 !important;
+    border-bottom: 2px solid #000 !important;
+}
+
+/* Regular cells */
+.table-grid .cell {
+    border-right: 2px solid #000;
+    border-bottom: 2px solid #000;
+    border-left: 2px solid #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12.5px;
+    font-weight: bold;
+    min-height: 30px;
+    padding: 5px 2px;
+    word-break: break-word;
+}
+
+
+/* Header row styling */
+.table-grid .cell:first-child,
+.table-grid .cell:nth-child(2),
+.table-grid .cell:nth-child(3),
+.table-grid .cell:nth-child(4),
+.table-grid .cell:nth-child(5) {
+    background: #f0f0f0;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+}
+
+/* ========== PDF EXPORT BUTTON - BELOW CONTAINER ========== */
+.pdf-btn {
+    display: block;
+    margin: 15px auto 5px auto;
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 120px;
+    transition: all 0.3s ease;
+}
+
+.pdf-btn:hover {
+    background: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
 .cell{
     border-right:2px solid #000;
     border-bottom:2px solid #000;
@@ -111,183 +237,197 @@ body{
 
 <div class="main-box">
 
-    <!-- MENU (FIXED ISSUE: only dots clickable) -->
-    <div class="dropdown">
-        <span class="dot" onclick="toggleDropdown()"></span>
-        <span class="dot" onclick="toggleDropdown()"></span>
-        <span class="dot" onclick="toggleDropdown()"></span>
-
-        <div class="dropdown-content" id="dropdownMenu">
-            <div onclick="openPage('athar','Athar')">Athar</div>
-            <div onclick="openPage('sabir','Sabir')">Sabir</div>
-            <div onclick="openPage('tahir','Tahir')">Tahir</div>
-            <div onclick="openPage('faisal','Faisal')">Faisal</div>
-        </div>
-    </div>
-
-
-
     <!-- ========== ATHAR PAGE ========== -->
     <div id="athar" class="page">
+        
+        <!-- Dropdown Menu -->
+        <div class="dropdown">
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <div class="dropdown-content" id="dropdownMenu">
+                <div onclick="openPage('athar','Athar')">Athar</div>
+                <div onclick="openPage('sabir','Sabir')">Sabir</div>
+                <div onclick="openPage('tahir','Tahir')">Tahir</div>
+                <div onclick="openPage('faisal','Faisal')">Faisal</div>
+            </div>
+        </div>
+        
+        <!-- Top Input Grid -->
         <div class="top-grid">
-            <div><span>Owner:</span><input id="owner-athar" type="text"></div>
+            <div><span>Owner:</span><input id="owner-athar" type="text" readonly></div>
             <div><span>Oil Sent On:</span><input type="text"></div>
             <div><span>Oil Usage:</span><input type="text"></div>
-            <div><span>Total Litre:</span><input type="text"></div>
-            <div><span>Rate:</span><input type="text"></div>
-            <div><span>Amount:</span><input type="text"></div>
+            <div><span>Total Litre:</span><input id="total-athar" type="text" readonly></div>
+            <div><span>Rate:</span><input id="rate-athar" type="text"></div>
+            <div><span>Amount:</span><input id="amount-athar" type="text" readonly></div>
         </div>
-
-        <div class="table-grid">
-            <div class="cell">Memo</div>
-            <div class="cell">Drum</div>
-            <div class="cell">Date</div>
-            <div class="cell">Vehicle</div>
-            <div class="cell">Litre</div>
+        
+        <!-- Scrollable Table Container -->
+        <div class="table-container">
+            <div class="table-grid" id="table-athar">
+                <div class="cell">Memo</div>
+                <div class="cell">Drum</div>
+                <div class="cell">Date</div>
+                <div class="cell">Vehicle</div>
+                <div class="cell">Litre</div>
+                <!-- Rows will be added dynamically here -->
+            </div>
         </div>
+        
+        <!-- PDF Button -->
+        <button class="pdf-btn" onclick="exportToPDF('athar', 'Athar')">
+            📄 Export PDF
+        </button>
     </div>
-
-
 
     <!-- ========== SABIR PAGE ========== -->
     <div id="sabir" class="page">
+        
+        <!-- Dropdown Menu -->
+        <div class="dropdown">
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <div class="dropdown-content" id="dropdownMenu">
+                <div onclick="openPage('athar','Athar')">Athar</div>
+                <div onclick="openPage('sabir','Sabir')">Sabir</div>
+                <div onclick="openPage('tahir','Tahir')">Tahir</div>
+                <div onclick="openPage('faisal','Faisal')">Faisal</div>
+            </div>
+        </div>
+        
+        <!-- Top Input Grid -->
         <div class="top-grid">
-            <div><span>Owner:</span><input id="owner-sabir" type="text"></div>
+            <div><span>Owner:</span><input id="owner-sabir" type="text" readonly></div>
             <div><span>Oil Sent On:</span><input type="text"></div>
             <div><span>Oil Usage:</span><input type="text"></div>
-            <div><span>Total Litre:</span><input type="text"></div>
-            <div><span>Rate:</span><input type="text"></div>
-            <div><span>Amount:</span><input type="text"></div>
+            <div><span>Total Litre:</span><input id="total-sabir" type="text" readonly></div>
+            <div><span>Rate:</span><input id="rate-sabir" type="text"></div>
+            <div><span>Amount:</span><input id="amount-sabir" type="text" readonly></div>
         </div>
-
-        <div class="table-grid">
-            <div class="cell">Memo</div>
-            <div class="cell">Drum</div>
-            <div class="cell">Date</div>
-            <div class="cell">Vehicle</div>
-            <div class="cell">Litre</div>
+        
+        <!-- Scrollable Table Container -->
+        <div class="table-container">
+            <div class="table-grid" id="table-sabir">
+                <div class="cell">Memo</div>
+                <div class="cell">Drum</div>
+                <div class="cell">Date</div>
+                <div class="cell">Vehicle</div>
+                <div class="cell">Litre</div>
+                <!-- Rows will be added dynamically here -->
+            </div>
         </div>
+        
+        <!-- PDF Button -->
+        <button class="pdf-btn" onclick="exportToPDF('sabir', 'Sabir')">
+            📄 Export PDF
+        </button>
     </div>
-
-
 
     <!-- ========== TAHIR PAGE ========== -->
     <div id="tahir" class="page">
+        
+        <!-- Dropdown Menu -->
+        <div class="dropdown">
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <div class="dropdown-content" id="dropdownMenu">
+                <div onclick="openPage('athar','Athar')">Athar</div>
+                <div onclick="openPage('sabir','Sabir')">Sabir</div>
+                <div onclick="openPage('tahir','Tahir')">Tahir</div>
+                <div onclick="openPage('faisal','Faisal')">Faisal</div>
+            </div>
+        </div>
+        
+        <!-- Top Input Grid -->
         <div class="top-grid">
-            <div><span>Owner:</span><input id="owner-tahir" type="text"></div>
+            <div><span>Owner:</span><input id="owner-tahir" type="text" readonly></div>
             <div><span>Oil Sent On:</span><input type="text"></div>
             <div><span>Oil Usage:</span><input type="text"></div>
-            <div><span>Total Litre:</span><input type="text"></div>
-            <div><span>Rate:</span><input type="text"></div>
-            <div><span>Amount:</span><input type="text"></div>
+            <div><span>Total Litre:</span><input id="total-tahir" type="text" readonly></div>
+            <div><span>Rate:</span><input id="rate-tahir" type="text"></div>
+            <div><span>Amount:</span><input id="amount-tahir" type="text" readonly></div>
         </div>
-
-        <div class="table-grid">
-            <div class="cell">Memo</div>
-            <div class="cell">Drum</div>
-            <div class="cell">Date</div>
-            <div class="cell">Vehicle</div>
-            <div class="cell">Litre</div>
+        
+        <!-- Scrollable Table Container -->
+        <div class="table-container">
+            <div class="table-grid" id="table-tahir">
+                <div class="cell">Memo</div>
+                <div class="cell">Drum</div>
+                <div class="cell">Date</div>
+                <div class="cell">Vehicle</div>
+                <div class="cell">Litre</div>
+                <!-- Rows will be added dynamically here -->
+            </div>
         </div>
+        
+        <!-- PDF Button -->
+        <button class="pdf-btn" onclick="exportToPDF('tahir', 'Tahir')">
+            📄 Export PDF
+        </button>
     </div>
-
-
 
     <!-- ========== FAISAL PAGE ========== -->
     <div id="faisal" class="page">
+        
+        <!-- Dropdown Menu -->
+        <div class="dropdown">
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <span class="dot" onclick="toggleDropdown()"></span>
+            <div class="dropdown-content" id="dropdownMenu">
+                <div onclick="openPage('athar','Athar')">Athar</div>
+                <div onclick="openPage('sabir','Sabir')">Sabir</div>
+                <div onclick="openPage('tahir','Tahir')">Tahir</div>
+                <div onclick="openPage('faisal','Faisal')">Faisal</div>
+            </div>
+        </div>
+        
+        <!-- Top Input Grid -->
         <div class="top-grid">
-            <div><span>Owner:</span><input id="owner-faisal" type="text"></div>
+            <div><span>Owner:</span><input id="owner-faisal" type="text" readonly></div>
             <div><span>Oil Sent On:</span><input type="text"></div>
             <div><span>Oil Usage:</span><input type="text"></div>
-            <div><span>Total Litre:</span><input type="text"></div>
-            <div><span>Rate:</span><input type="text"></div>
-            <div><span>Amount:</span><input type="text"></div>
+            <div><span>Total Litre:</span><input id="total-faisal" type="text" readonly></div>
+            <div><span>Rate:</span><input id="rate-faisal" type="text"></div>
+            <div><span>Amount:</span><input id="amount-faisal" type="text" readonly></div>
         </div>
-
-        <div class="table-grid">
-            <div class="cell">Memo</div>
-            <div class="cell">Drum</div>
-            <div class="cell">Date</div>
-            <div class="cell">Vehicle</div>
-            <div class="cell">Litre</div>
+        
+        <!-- Scrollable Table Container -->
+        <div class="table-container">
+            <div class="table-grid" id="table-faisal">
+                <div class="cell">Memo</div>
+                <div class="cell">Drum</div>
+                <div class="cell">Date</div>
+                <div class="cell">Vehicle</div>
+                <div class="cell">Litre</div>
+                <!-- Rows will be added dynamically here -->
+            </div>
         </div>
+        
+        <!-- PDF Button -->
+        <button class="pdf-btn" onclick="exportToPDF('faisal', 'Faisal')">
+            📄 Export PDF
+        </button>
     </div>
 
 </div>
 
-
-
 <script>
-
-function loadOwnerData(ownerName) {
-    const key = `ownerData_${ownerName}`;
-    const data = JSON.parse(localStorage.getItem(key)) || [];
-
-    const page = document.getElementById(ownerName.toLowerCase());
-    const table = page.querySelector(".table-grid");
-
-    // clear old rows (header ke baad)
-    table.querySelectorAll(".input-cell").forEach(c => c.remove());
-
-    let total = 0;
-
-    data.forEach(item => {
-        total += Number(item.litre) || 0;
-
-        ["memo","drum","date","vehicle","litre"].forEach(k => {
-            const div = document.createElement("div");
-            div.className = "cell input-cell";
-            div.textContent = item[k];
-            table.appendChild(div);
-        });
-    });
-
-    page.querySelector('input[placeholder], input').value = ownerName;
-}
+/* ========== DATE FORMAT FUNCTION ========== */
+function formatDateToDDMMYYYY(dateString) {
+    if (!dateString) return "";
     
-// dropdown toggle
-function toggleDropdown(){
-    const menu = document.getElementById("dropdownMenu");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
-}
-
-// PAGE switch + auto owner fill
-function openPage(id, ownerName){
-    document.getElementById("dropdownMenu").style.display = "none";
-
-    document.querySelectorAll(".page").forEach(p => p.style.display = "none");
-    document.getElementById(id).style.display = "block";
-
-    document.getElementById(`owner-${id}`).value = ownerName;
-
-    // ✅ YAHAN CALL SAHI HAI
-    loadOwnerFromOil(ownerName);
-}
-
-
-// close dropdown when clicking outside
-window.onclick = function(e){
-    if(!e.target.closest(".dropdown")){
-        document.getElementById("dropdownMenu").style.display = "none";
+    const parts = dateString.split('-');
+    if (parts.length === 3) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
     }
+    return dateString;
 }
 
-// Auto generate 16 rows in every table
-document.querySelectorAll(".table-grid").forEach(table => {
-    for(let i=0;i<16;i++){
-        for(let j=0;j<5;j++){
-            let div = document.createElement("div");
-            div.className = "cell input-cell";
-            div.innerHTML = "<input>";
-            table.appendChild(div);
-        }
-    }
-});
-
-// default page
-openPage("athar","Athar");
-
-// REAL-TIME OWNER DATA LOADING
+/* ========== LOAD OWNER DATA WITH UNLIMITED ROWS ========== */
 function loadOwnerFromOil(ownerName) {
     const params = new URLSearchParams(window.location.search);
     const fileID = params.get("id") || "default";
@@ -302,11 +442,11 @@ function loadOwnerFromOil(ownerName) {
     }
     
     const table = page.querySelector(".table-grid");
+    const ownerId = ownerName.toLowerCase();
     
-    // Clear existing rows (keep header row only)
-    const headerCells = table.querySelectorAll('.cell');
-    for (let i = 5; i < headerCells.length; i++) {
-        headerCells[i].remove();
+    // Clear existing rows (keep only 5 header cells)
+    while (table.children.length > 5) {
+        table.removeChild(table.lastChild);
     }
     
     // Filter data for this owner
@@ -314,22 +454,28 @@ function loadOwnerFromOil(ownerName) {
         record.owner && record.owner.toLowerCase() === ownerName.toLowerCase()
     );
     
+    // Sort by date (newest first)
+    ownerData.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
     let totalLitre = 0;
     
-    // Add data rows
+    // Add data rows - UNLIMITED based on data
     ownerData.forEach(record => {
         totalLitre += parseFloat(record.litre) || 0;
         
+        // Format date
+        const formattedDate = formatDateToDDMMYYYY(record.date);
+        
         // Create row cells
-        const values = [
+        const rowData = [
             record.memo || "",
-            record.drum,
-            record.date,
-            record.vehicle,
-            record.litre
+            record.drum || "",
+            formattedDate,
+            record.vehicle || "",
+            record.litre || ""
         ];
         
-        values.forEach(value => {
+        rowData.forEach(value => {
             const cell = document.createElement("div");
             cell.className = "cell input-cell";
             cell.textContent = value;
@@ -338,17 +484,15 @@ function loadOwnerFromOil(ownerName) {
     });
     
     // Update top grid
-    const topInputs = page.querySelectorAll(".top-grid input");
-    if (topInputs[0]) topInputs[0].value = ownerName; // Owner name
-    if (topInputs[3]) topInputs[3].value = totalLitre.toFixed(2); // Total litre
+    updateOwnerSummary(ownerId, ownerName, totalLitre, ownerData.length);
     
     // Show message if no data
     if (ownerData.length === 0) {
         const messageCell = document.createElement("div");
         messageCell.style.gridColumn = "1 / span 5";
         messageCell.style.textAlign = "center";
-        messageCell.style.padding = "15px";
-        messageCell.style.color = "#888";
+        messageCell.style.padding = "20px";
+        messageCell.style.color = "#666";
         messageCell.textContent = `No oil records found for ${ownerName}`;
         table.appendChild(messageCell);
     }
@@ -356,7 +500,179 @@ function loadOwnerFromOil(ownerName) {
     console.log(`Loaded ${ownerData.length} records for ${ownerName}, Total: ${totalLitre}L`);
 }
 
-// REAL-TIME LISTENER - Auto refresh when oil data changes
+/* ========== UPDATE OWNER SUMMARY CALCULATIONS ========== */
+function updateOwnerSummary(ownerId, ownerName, totalLitre, recordCount) {
+    const page = document.getElementById(ownerId);
+    if (!page) return;
+    
+    // Update basic info
+    const ownerInput = page.querySelector('#owner-' + ownerId);
+    if (ownerInput) ownerInput.value = ownerName;
+    
+    const totalInput = page.querySelector('#total-' + ownerId);
+    if (totalInput) totalInput.value = totalLitre.toFixed(2);
+    
+    // Get rate and calculate amount
+    const rateInput = page.querySelector('#rate-' + ownerId);
+    const amountInput = page.querySelector('#amount-' + ownerId);
+    
+    if (rateInput && amountInput) {
+        // Auto-calculate amount when rate changes
+        rateInput.addEventListener('input', function() {
+            const rate = parseFloat(this.value) || 0;
+            const amount = totalLitre * rate;
+            amountInput.value = amount.toFixed(2);
+            saveOwnerRate(ownerId, rate, amount);
+        });
+        
+        // Load saved rate
+        const savedData = JSON.parse(localStorage.getItem(`owner_${ownerId}_rate`)) || {};
+        if (savedData.rate) {
+            rateInput.value = savedData.rate;
+            amountInput.value = (totalLitre * savedData.rate).toFixed(2);
+        }
+    }
+}
+
+/* ========== SAVE RATE TO LOCALSTORAGE ========== */
+function saveOwnerRate(ownerId, rate, amount) {
+    localStorage.setItem(`owner_${ownerId}_rate`, JSON.stringify({
+        rate: rate,
+        amount: amount,
+        savedAt: new Date().toISOString()
+    }));
+}
+
+/* ========== PDF EXPORT FUNCTION ========== */
+function exportToPDF(ownerId, ownerName) {
+    const params = new URLSearchParams(window.location.search);
+    const fileID = params.get("id") || "default";
+    const masterKey = `oilOwnerMaster_${fileID}`;
+    
+    const masterData = JSON.parse(localStorage.getItem(masterKey)) || [];
+    const ownerData = masterData.filter(record => 
+        record.owner && record.owner.toLowerCase() === ownerName.toLowerCase()
+    );
+    
+    if (ownerData.length === 0) {
+        alert(`No data found for ${ownerName}`);
+        return;
+    }
+    
+    // Sort by date
+    ownerData.sort((a, b) => new Date(b.date) - new Date(a.date));
+    
+    // Calculate totals
+    let totalLitre = 0;
+    ownerData.forEach(record => {
+        totalLitre += parseFloat(record.litre) || 0;
+    });
+    
+    // Get rate and amount
+    const page = document.getElementById(ownerId);
+    const rateInput = page.querySelector('#rate-' + ownerId);
+    const rate = rateInput ? parseFloat(rateInput.value) || 0 : 0;
+    const amount = totalLitre * rate;
+    
+    // Create PDF content
+    const pdfContent = `
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>${ownerName} - Oil Report</title>
+            <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                h1 { color: #333; border-bottom: 2px solid #333; padding-bottom: 10px; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { border: 1px solid #000; padding: 8px; text-align: center; }
+                th { background-color: #f2f2f2; }
+                .summary { margin-top: 30px; padding: 15px; background: #f9f9f9; border: 1px solid #ddd; }
+                .total { font-weight: bold; color: #d9534f; }
+            </style>
+        </head>
+        <body>
+            <h1>Oil Report - ${ownerName}</h1>
+            <p><strong>Generated:</strong> ${new Date().toLocaleString()}</p>
+            <p><strong>File ID:</strong> ${fileID}</p>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Memo</th>
+                        <th>Drum</th>
+                        <th>Date</th>
+                        <th>Vehicle</th>
+                        <th>Litre</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${ownerData.map(record => `
+                        <tr>
+                            <td>${record.memo || ""}</td>
+                            <td>${record.drum || ""}</td>
+                            <td>${formatDateToDDMMYYYY(record.date)}</td>
+                            <td>${record.vehicle || ""}</td>
+                            <td>${record.litre || "0"}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+            
+            <div class="summary">
+                <h3>Summary</h3>
+                <p><strong>Total Records:</strong> ${ownerData.length}</p>
+                <p><strong>Total Litre:</strong> <span class="total">${totalLitre.toFixed(2)} L</span></p>
+                <p><strong>Rate:</strong> ₹${rate.toFixed(2)} per litre</p>
+                <p><strong>Total Amount:</strong> <span class="total">₹${amount.toFixed(2)}</span></p>
+            </div>
+        </body>
+        </html>
+    `;
+    
+    // Open print dialog for PDF
+    const printWindow = window.open('', '_blank');
+    printWindow.document.write(pdfContent);
+    printWindow.document.close();
+    printWindow.focus();
+    
+    // Auto print after delay
+    setTimeout(() => {
+        printWindow.print();
+    }, 500);
+}
+
+/* ========== DROPDOWN MENU ========== */
+function toggleDropdown() {
+    const menu = document.getElementById("dropdownMenu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function openPage(id, ownerName) {
+    document.getElementById("dropdownMenu").style.display = "none";
+    
+    // Hide all pages
+    document.querySelectorAll(".page").forEach(p => p.style.display = "none");
+    
+    // Show selected page
+    const page = document.getElementById(id);
+    if (page) {
+        page.style.display = "block";
+        
+        // Load owner data
+        setTimeout(() => {
+            loadOwnerFromOil(ownerName);
+        }, 100);
+    }
+}
+
+// Close dropdown when clicking outside
+window.onclick = function(e) {
+    if (!e.target.closest(".dropdown")) {
+        document.getElementById("dropdownMenu").style.display = "none";
+    }
+}
+
+/* ========== REAL-TIME UPDATES ========== */
 function setupRealTimeListener() {
     const params = new URLSearchParams(window.location.search);
     const fileID = params.get("id") || "default";
@@ -365,19 +681,16 @@ function setupRealTimeListener() {
     // Listen for storage changes
     window.addEventListener('storage', function(e) {
         if (e.key === masterKey) {
-            console.log("Real-time update detected!");
-            
-            // Get current active owner page
+            // Reload data for active owner
             const activePages = document.querySelectorAll('.page');
             let activeOwner = null;
             
             activePages.forEach(page => {
                 if (page.style.display === 'block') {
-                    activeOwner = page.id; // athar, sabir, etc.
+                    activeOwner = page.id;
                 }
             });
             
-            // Reload data for active owner
             if (activeOwner) {
                 const ownerName = activeOwner.charAt(0).toUpperCase() + activeOwner.slice(1);
                 loadOwnerFromOil(ownerName);
@@ -385,7 +698,7 @@ function setupRealTimeListener() {
         }
     });
     
-    // Also check every 2 seconds (for same-tab changes)
+    // Auto-refresh every 3 seconds
     setInterval(() => {
         const activePages = document.querySelectorAll('.page');
         let activeOwner = null;
@@ -400,38 +713,16 @@ function setupRealTimeListener() {
             const ownerName = activeOwner.charAt(0).toUpperCase() + activeOwner.slice(1);
             loadOwnerFromOil(ownerName);
         }
-    }, 2000);
+    }, 3000);
 }
 
-// Initialize when page loads
+/* ========== INITIALIZE ON PAGE LOAD ========== */
 window.addEventListener('DOMContentLoaded', function() {
     setupRealTimeListener();
     
-    // Load initial data for current owner
-    setTimeout(() => {
-        const activePages = document.querySelectorAll('.page');
-        activePages.forEach(page => {
-            if (page.style.display === 'block') {
-                const ownerName = page.id.charAt(0).toUpperCase() + page.id.slice(1);
-                loadOwnerFromOil(ownerName);
-            }
-        });
-    }, 500);
+    // Open default page (Athar)
+    openPage("athar", "Athar");
 });
-
-// Also update the openPage function to load data
-const originalOpenPage = window.openPage;
-window.openPage = function(id, ownerName) {
-    if (originalOpenPage) originalOpenPage(id, ownerName);
-    
-    // Load data for this owner
-    setTimeout(() => {
-        loadOwnerFromOil(ownerName);
-    }, 100);
-};
-
-
-
 </script>
 
 </body>
