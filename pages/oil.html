@@ -164,6 +164,11 @@ select {
         <div class="drum-item" onclick="openDrum(8)">Drum 8</div>
         <div class="drum-item" onclick="openDrum(9)">Drum 9</div>
         <div class="drum-item" onclick="openDrum(10)">Drum 10</div>
+        <div class="drum-item" onclick="openDrum(10)">Drum 11</div>
+        <div class="drum-item" onclick="openDrum(10)">Drum 12</div>
+        <div class="drum-item" onclick="openDrum(10)">Drum 13</div>
+        <div class="drum-item" onclick="openDrum(10)">Drum 14</div>
+        <div class="drum-item" onclick="openDrum(10)">Drum 15</div>
     </div>
 
     <div class="header">
@@ -234,17 +239,39 @@ const fileID = params.get("id") || "default";
 
 let currentDrum = 1;
 
+/* ------------------------------
+  1️⃣ Vehicle Owners & Default Litres
+--------------------------------*/
 const ownerData = {
     "Sabir": ["085-TML","695-TLP","766-TLB","930-TLT","2134-JU","7617-JU","7884-JU","9394-JU","9895-JU","9057-JV"],
     "Athar": ["494-TLD","409-TLB","793-TLL","826-TLG","158-TLY"],
     "Faisal": ["348-SPA","948-TMK","3820-LES"],
     "Tahir": ["365-TLT","998-TLH","3606-JU"]
 };
+
+// ✅ VEHICLE-LITRE MAPPING
+const vehicleLitreMap = {
+    // 14 Litre vehicles
+    "085-TML": 14, "348-SPA": 14, "365-TLT": 14, "695-TLP": 14,
+    "766-TLB": 14, "793-TLL": 14, "826-TLG": 14, "930-TLT": 14,
+    "948-TMK": 14, "3606-JU": 14, "3820-LES": 14, "7617-JU": 14,
+    "7884-JU": 14, "9057-JV": 14, "314-TLJ": 14,
+    
+    // 15 Litre vehicles
+    "998-TLH": 15, "2134-JU": 15, "9394-JU": 15, "9895-JU": 15,
+    
+    // 16 Litre vehicles
+    "494-TLD": 16, "409-TLB": 16,
+};
+
 const vehicleOwner = {};
 for (let owner in ownerData) {
     ownerData[owner].forEach(v => vehicleOwner[v] = owner);
 }
 
+/* ------------------------------
+  2️⃣ Build Grid
+--------------------------------*/
 const grid = document.querySelector(".grid");
 for (let i = 0; i < 16; i++) {
     grid.insertAdjacentHTML("beforeend", `
@@ -256,22 +283,41 @@ for (let i = 0; i < 16; i++) {
             </select>
         </div>
         <div class="cell owner"></div>
-        <div class="cell"><input type="number" class="litre-input" min="0" oninput="updateTotalLitre()"></div>
+        <div class="cell">
+            <input type="number" class="litre-input" min="0" oninput="updateTotalLitre()">
+        </div>
     `);
 }
 
+/* ------------------------------
+  3️⃣ Owner Set with Auto Litre
+--------------------------------*/
 function setOwner(selectBox) {
     const vehicle = selectBox.value;
     const ownerCell = selectBox.parentElement.nextElementSibling;
     const litreInput = ownerCell.nextElementSibling.querySelector("input");
-    const dateInput = selectBox.parentElement.previousElementSibling.querySelector("input");
-
+    
+    // Set owner
     const owner = vehicleOwner[vehicle] || "";
     ownerCell.textContent = owner;
-
+    
+    // ✅ AUTO SET LITRE
+    if (vehicle && vehicleLitreMap[vehicle]) {
+        litreInput.value = vehicleLitreMap[vehicle];
+    } else if (vehicle) {
+        litreInput.value = "";
+    }
+    
+    // Update total
+    updateTotalLitre();
+    
+    // Save to storage
     saveToStorage();
 }
 
+/* ------------------------------
+  4️⃣ Total Litre
+--------------------------------*/
 function updateTotalLitre() {
     let total = 0;
     document.querySelectorAll(".litre-input").forEach(input => {
@@ -282,6 +328,9 @@ function updateTotalLitre() {
     saveToStorage();
 }
 
+/* ------------------------------
+  5️⃣ Save / Load Full Drum
+--------------------------------*/
 function getCurrentDrumKey() {
     const params = new URLSearchParams(window.location.search);
     const fileID = params.get("id") || "default";
@@ -363,30 +412,19 @@ function clearCurrentPage() {
 const menuDots = document.getElementById("menuDots");
 const drumPopup = document.getElementById("drumPopup");
 
-// CLOSE MENU FUNCTION
 function closeDrumMenu() {
     drumPopup.style.display = "none";
 }
 
-// OPEN DRUM FUNCTION - FIXED
 function openDrum(num) {
-    closeDrumMenu(); // Pehle menu close
-    
-    // Save current drum
+    closeDrumMenu();
     saveToStorage();
-    
-    // Switch drum
     currentDrum = num;
     document.getElementById("drumNumber").textContent = num;
-    
-    // Load new drum data
     loadFromStorage();
-    
-    // Sync to owner master
     syncToOwnerMaster();
 }
 
-// Menu dots click handler
 menuDots.addEventListener("click", function(e) {
     e.stopPropagation();
     
@@ -397,14 +435,12 @@ menuDots.addEventListener("click", function(e) {
     }
 });
 
-// Click outside to close
 document.addEventListener("click", function(e) {
     if (!e.target.closest(".menu-dots") && !e.target.closest(".drum-popup")) {
         closeDrumMenu();
     }
 });
 
-// ESC key to close
 document.addEventListener("keydown", function(e) {
     if (e.key === "Escape") {
         closeDrumMenu();
@@ -422,7 +458,8 @@ function syncToOwnerMaster() {
     const masterKey = getOwnerMasterKey();
     let allData = [];
     
-    for (let drumNum = 1; drumNum <= 10; drumNum++) {
+    // ✅ CHANGED: 1 to 15 drums
+    for (let drumNum = 1; drumNum <= 15; drumNum++) {
         const drumKey = `oil_${fileID}_Drum${drumNum}`;
         const drumData = JSON.parse(localStorage.getItem(drumKey));
         
@@ -443,9 +480,9 @@ function syncToOwnerMaster() {
     }
     
     localStorage.setItem(masterKey, JSON.stringify(allData));
+    console.log(`Synced ${allData.length} records from all drums`);
 }
 
-// ==================== SETUP AUTO-SYNC ====================
 function setupRealTimeSync() {
     document.querySelectorAll('input, select').forEach(element => {
         element.addEventListener('input', () => {
@@ -459,23 +496,16 @@ function setupRealTimeSync() {
     setTimeout(syncToOwnerMaster, 1000);
 }
 
-// ==================== PAGE LOAD ====================
 window.addEventListener('DOMContentLoaded', function() {
-    // Menu close on load
     closeDrumMenu();
-    
-    // Load data
     loadFromStorage();
     updateTotalLitre();
     setupRealTimeSync();
     
-    // Auto-save on input
     document.querySelectorAll("input, select").forEach(el => {
         el.addEventListener("input", debounceSave);
     });
 });
-
-// Remove duplicate saveOwnerMaster function call
 </script>
 
 </body>
