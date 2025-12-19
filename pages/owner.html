@@ -283,7 +283,7 @@
             <!-- Top Input Grid -->
             <div class="top-grid">
                 <div><span>Owner:</span><input id="owner-athar" type="text" readonly></div>
-                <div><span>Oil Sent On:</span><input type="date" class="date-input" required></div>
+                <div><span>Oil Sent On:</span><input type="date" class="date-input" required ></div>
                 <div><span>Oil Usage:</span><input type="text"></div>
                 <div><span>Total Litre:</span><input id="total-athar" type="text" readonly></div>
                 <div><span>Rate:</span><input id="rate-athar" type="text"></div>
@@ -327,7 +327,7 @@
             <!-- Top Input Grid -->
             <div class="top-grid">
                 <div><span>Owner:</span><input id="owner-sabir" type="text" readonly></div>
-                <div><span>Oil Sent On:</span><input type="text"></div>
+                <div><span>Oil Sent On:</span><input type="date" class="date-input" required></div>
                 <div><span>Oil Usage:</span><input type="text"></div>
                 <div><span>Total Litre:</span><input id="total-sabir" type="text" readonly></div>
                 <div><span>Rate:</span><input id="rate-sabir" type="text"></div>
@@ -371,7 +371,7 @@
             <!-- Top Input Grid -->
             <div class="top-grid">
                 <div><span>Owner:</span><input id="owner-tahir" type="text" readonly></div>
-                <div><span>Oil Sent On:</span><input type="text"></div>
+                <div><span>Oil Sent On:</span><input type="date" class="date-input" required></div>
                 <div><span>Oil Usage:</span><input type="text"></div>
                 <div><span>Total Litre:</span><input id="total-tahir" type="text" readonly></div>
                 <div><span>Rate:</span><input id="rate-tahir" type="text"></div>
@@ -416,7 +416,7 @@
             <!-- Top Input Grid -->
             <div class="top-grid">
                 <div><span>Owner:</span><input id="owner-faisal" type="text" readonly></div>
-                <div><span>Oil Sent On:</span><input type="text"></div>
+                <div><span>Oil Sent On:</span><input type="date" class="date-input" required></div>
                 <div><span>Oil Usage:</span><input type="text"></div>
                 <div><span>Total Litre:</span><input id="total-faisal" type="text" readonly></div>
                 <div><span>Rate:</span><input id="rate-faisal" type="text"></div>
@@ -552,13 +552,6 @@
                     amountInput.value = amount.toFixed(2);
                     saveOwnerRate(ownerId, rate, amount);
                 });
-
-                // Load saved rate
-                const savedData = JSON.parse(localStorage.getItem(`owner_${ownerId}_rate`)) || {};
-                if (savedData.rate) {
-                    rateInput.value = savedData.rate;
-                    amountInput.value = (totalLitre * savedData.rate).toFixed(2);
-                }
             }
         }
 
@@ -606,6 +599,12 @@
                 rate = 0;
             }
 
+
+            // 🔹 Get Oil Sent & Oil Usage from localStorage
+const oilSent = localStorage.getItem(`oil_sent_${ownerId}`) || "";
+const oilUsage = localStorage.getItem(`oil_usage_${ownerId}`) || "";
+
+
             // Get date format function
             const formatDateToDDMMYYYY = window.formatDateToDDMMYYYY || function (dateString) {
                 if (!dateString) return "";
@@ -637,7 +636,7 @@
             ">
                 <div style="display: flex; flex-direction: column; align-items: center;">
                     <span style="font-size: 13px; font-weight: bold;">Owner:</span>
-                    <input type="text" value="${ownerName}" readonly style="
+                    <input type="text" value="${ownerName}" style="
                         width: 70%;
                         border: none;
                         border-bottom: 1.3px solid #000;
@@ -651,7 +650,7 @@
                 </div>
                 <div style="display: flex; flex-direction: column; align-items: center;">
                     <span style="font-size: 13px; font-weight: bold;">Oil Sent On:</span>
-                    <input type="text" value="" readonly style="
+                    <input type="text" value="${oilSent}" style="
                         width: 70%;
                         border: none;
                         border-bottom: 1.3px solid #000;
@@ -665,7 +664,7 @@
                 </div>
                 <div style="display: flex; flex-direction: column; align-items: center;">
                     <span style="font-size: 13px; font-weight: bold;">Oil Usage:</span>
-                    <input type="text" value="" readonly style="
+                    <input type="text" value="${oilUsage}" readonly style="
                         width: 70%;
                         border: none;
                         border-bottom: 1.3px solid #000;
