@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oil Summary</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
+    padding:20px;
+}
+
+.container{
+    max-width:500px;
+    margin:auto;
+    background:#fff;
+    border:2px solid #000;
+    padding:15px;
+}
+
+/* ===== INPUT SECTION AS TABLE ===== */
+.input-table{
+    display:grid;
+    grid-template-columns: 1fr 1fr;
+    gap:1px;
+    margin-bottom:25px;
+    border:2px solid #000;
+    background:#000;
+}
+
+.input-row{
+    display:contents;
+}
+
+.input-label{
+    background:#f0f0f0;
+    padding:10px 8px;
+    font-size:13px;
+    font-weight:bold;
+    border-right:1px solid #000;
+}
+
+.input-value{
+    background:#fff;
+    padding:8px 5px;
+    border-right:1px solid #000;
+}
+
+.input-value input{
+    width:100%;
+    border:none;
+    background:transparent;
+    padding:4px 2px;
+    font-size:14px;
+    outline:none;
+    text-align:center;
+}
+
+/* Remove right border for last column */
+.input-row .input-label:last-child,
+.input-row .input-value:last-child{
+    border-right:none;
+}
+
+/* ===== TABLE GRID ===== */
+
+.cell{
+    border-right:1.5px solid #000;
+    border-bottom:1.5px solid #000;
+    padding:8px 5px;
+    text-align:center;
+    font-weight:bold;
+}
+
+.header{
+    background:#f0f0f0;
+}
+
+.table .cell:nth-child(4n){ /* last column ka right border remove */
+    border-right:none;
+}
+
+.total{
+    background:#eaeaea;
+}
+
+.table {
+    display: grid;
+    grid-template-columns: 15% 20% 20% 45%; /* updated widths */
+    border: 2px solid #000;
+    font-size: 14px;
+}
+
+@media (max-width: 480px) {
+    .table {
+        grid-template-columns: 15% 20% 20% 45%;
+        font-size: 11px;
+    }
+}
+
+@media (max-width: 768px) {
+    .table {
+        grid-template-columns: 15% 20% 20% 45%;
+        font-size: 12px;
+    }
+}
+
+@media (min-width: 1200px) {
+    .table {
+        grid-template-columns: 15% 20% 20% 45%;
+        font-size: 15px;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- ===== INPUTS SECTION AS TABLE ===== -->
+    <div class="input-table">
+        
+        <div class="input-row">
+            <div class="input-label">Drum Price</div>
+            <div class="input-value"><input type="text"></div>
+        </div>
+        
+        <div class="input-row">
+            <div class="input-label">Drum Quantity</div>
+            <div class="input-value"><input type="text"></div>
+        </div>
+        
+        <div class="input-row">
+            <div class="input-label">All Drum Amount</div>
+            <div class="input-value"><input type="text"></div>
+        </div>
+        
+        <div class="input-row">
+            <div class="input-label">Total Kiraya</div>
+            <div class="input-value"><input type="text"></div>
+        </div>
+        
+        <div class="input-row">
+            <div class="input-label">Total Amount</div>
+            <div class="input-value"><input type="text"></div>
+        </div>
+        
+        <div class="input-row">
+            <div class="input-label">Total Litres (10 Drums)</div>
+            <div class="input-value"><input type="text"></div>
+        </div>
+        
+        <div class="input-row">
+            <div class="input-label">Oil Rate per Litre</div>
+            <div class="input-value"><input type="text"></div>
+        </div>
+        
+        <div class="input-row">
+            <div class="input-label">Average Litre per Drum</div>
+            <div class="input-value"><input type="text"></div>
+        </div>
+        
+    </div>
+
+    <!-- ===== TABLE SECTION ===== -->
+    <div class="table">
+
+        <!-- Header -->
+        <div class="cell header">Oil Partner</div>
+        <div class="cell header">Liters</div>
+        <div class="cell header">Amount</div>
+        <div class="cell header">Raqam Wasooli Ki Tafseel</div>
+
+        <!-- Rows -->
+        <div class="cell">Faisal</div>
+        <div class="cell">308</div>
+        <div class="cell">241,810</div>
+        <div class="cell"></div>
+
+        <div class="cell">Tahir</div>
+        <div class="cell">342</div>
+        <div class="cell">268,504</div>
+        <div class="cell"></div>
+
+        <div class="cell">Athar</div>
+        <div class="cell">334</div>
+        <div class="cell">262,223</div>
+        <div class="cell"></div>
+
+        <div class="cell">Sabir</div>
+        <div class="cell">1,103</div>
+        <div class="cell">865,963</div>
+        <div class="cell"></div>
+
+        <!-- Total -->
+        <div class="cell total">TOTAL</div>
+        <div class="cell total">2,087</div>
+        <div class="cell total">1,638,500</div>
+        <div class="cell total"></div>
+
+    </div>
+
+</div>
+
+</body>
+</html>
