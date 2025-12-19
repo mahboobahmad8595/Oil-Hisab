@@ -542,6 +542,7 @@ function saveOwnerRate(ownerId, rate, amount) {
     }));
 }
 
+
 /* ========== PDF EXPORT FUNCTION - CLEAN, MINIMAL SPACE ========== */
 function exportToPDF(ownerId, ownerName) {
     const params = new URLSearchParams(window.location.search);
@@ -1023,9 +1024,42 @@ function setupRealTimeListener() {
     }, 3000);
 }
 
-/* ========== INITIALIZE ON PAGE LOAD ========== */
+/* ========== AUTO-SAVE FOR OIL SENT/USAGE ========== */
+function setupOilInputsAutoSave() {
+    // Har owner page ke liye
+    ['athar', 'sabir', 'tahir', 'faisal'].forEach(ownerId => {
+        const page = document.getElementById(ownerId);
+        if (!page) return;
+        
+        // Oil Sent On input (2nd input)
+        const oilSentInput = page.querySelectorAll('.top-grid input')[1];
+        // Oil Usage input (3rd input)
+        const oilUsageInput = page.querySelectorAll('.top-grid input')[2];
+        
+        // Save on input
+        if (oilSentInput) {
+            oilSentInput.addEventListener('input', function() {
+                localStorage.setItem(`oil_sent_${ownerId}`, this.value);
+            });
+            // Load saved value
+            oilSentInput.value = localStorage.getItem(`oil_sent_${ownerId}`) || '';
+        }
+        
+        if (oilUsageInput) {
+            oilUsageInput.addEventListener('input', function() {
+                localStorage.setItem(`oil_usage_${ownerId}`, this.value);
+            });
+            // Load saved value
+            oilUsageInput.value = localStorage.getItem(`oil_usage_${ownerId}`) || '';
+        }
+    });
+}
+
 window.addEventListener('DOMContentLoaded', function() {
     setupRealTimeListener();
+    
+    // ✅ YEH LINE ADD KARO:
+    setupOilInputsAutoSave(); // Oil Sent/Usage save/load
     
     // Open default page (Athar)
     openPage("athar", "Athar");
