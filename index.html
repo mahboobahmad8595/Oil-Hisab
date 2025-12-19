@@ -132,6 +132,9 @@ function createCard(id, titleText) {
         else if (titleText.toLowerCase() === "oil") {
             window.location.href = `pages/oil.html?id=${id}&name=${cardName}`;
         } 
+        else if (titleText.toLowerCase() === "summary") {  // ✅ YEH ADD KARO
+        window.location.href = `pages/summary.html?id=${id}&name=${cardName}`;
+    }
         // Default → dashboard.html
         else {
             window.location.href = `pages/dashboard.html?id=${id}&name=${cardName}`;
@@ -216,7 +219,9 @@ function restoreTitle(input, id) {
             window.location.href = `pages/owner.html?id=${id}&name=${cardName}`;
         } else if (newTitle.toLowerCase() === "oil") {
             window.location.href = `pages/oil.html?id=${id}&name=${cardName}`;
-        } else {
+        } else if (newTitle.toLowerCase() === "summary") {
+        window.location.href = `pages/summary.html?id=${id}&name=${cardName}`;
+        }else {
             window.location.href = `pages/dashboard.html?id=${id}&name=${cardName}`;
         }
     });

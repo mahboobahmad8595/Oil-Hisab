@@ -3,25 +3,26 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title> <!-- Ye ab JS se file name set hoga -->
+    <title>Dashboard</title>
 
     <style>
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
+            overflow-x: hidden;
         }
 
-        /* HEADER */
+        /* HEADER - Mobile responsive */
         header {
             width: 100%;
-            padding: 18px 0;
+            padding: 15px 0;
             background: #222;
             color: white;
             text-align: center;
-            font-size: 26px;
+            font-size: 22px;
             font-weight: 600;
-            letter-spacing: 1px;
+            letter-spacing: 0.5px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.3);
             position: fixed;
             top: 0;
@@ -29,98 +30,249 @@
             z-index: 10;
         }
 
-        /* FOOTER */
+        /* FOOTER - Mobile responsive */
         footer {
             width: 100%;
-            padding: 15px 0;
+            padding: 12px 0;
             background: #222;
             color: #ddd;
             text-align: center;
-            font-size: 18px;
+            font-size: 14px;
             position: fixed;
             bottom: 0;
             left: 0;
             box-shadow: 0 -3px 10px rgba(0,0,0,0.3);
+            z-index: 10;
         }
 
-        /* BODY AREA */
+        /* BODY AREA - Mobile adjustments */
         body {
             display: flex;
             justify-content: center;
             align-items: center;
             background: linear-gradient(135deg, #efefef, #ffffff);
             font-family: 'Poppins', Arial, sans-serif;
-
-            padding-top: 90px;   /* Header height adjust */
-            padding-bottom: 70px; /* Footer height adjust */
+            padding-top: 70px;   /* Reduced for mobile */
+            padding-bottom: 60px; /* Reduced for mobile */
             box-sizing: border-box;
+            min-height: 100vh;
         }
 
         .container {
             display: flex;
-            gap: 45px;
+            gap: 25px;
             flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            height: calc(100vh - 180px); 
+            width: 100%;
+            max-width: 1200px;
+            padding: 10px;
+            height: calc(100vh - 130px); /* Adjusted for mobile */
+            overflow-y: auto;
         }
 
-        /* CARD */
+        /* CARD - Mobile responsive */
         .card {
-            width: 240px;
-            height: 210px;
+            width: 280px;
+            height: 240px;
             background: #ffffffc9;
-            border-radius: 22px;
-
+            border-radius: 20px;
             box-shadow:
-                0px 10px 25px rgba(0, 0, 0, 0.18),
-                0px 0px 50px rgba(150, 150, 150, 0.18);
-
+                0px 8px 20px rgba(0, 0, 0, 0.15),
+                0px 0px 30px rgba(150, 150, 150, 0.15);
             backdrop-filter: blur(8px);
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-
             cursor: pointer;
-            transition: 0.4s ease;
+            transition: 0.3s ease;
+            margin: 10px;
         }
 
         .card:hover {
-            transform: translateY(-12px) scale(1.06);
+            transform: translateY(-8px) scale(1.04);
             box-shadow:
-                0px 15px 40px rgba(0,0,0,0.28),
-                0px 0px 60px rgba(120,120,120,0.25);
+                0px 12px 30px rgba(0,0,0,0.22),
+                0px 0px 40px rgba(120,120,120,0.2);
         }
 
         .icon {
-            font-size: 70px;
-            margin-bottom: 12px;
-            filter: drop-shadow(0px 4px 5px rgba(0,0,0,0.25));
+            font-size: 65px;
+            margin-bottom: 15px;
+            filter: drop-shadow(0px 3px 4px rgba(0,0,0,0.2));
         }
 
         .text {
-            font-size: 26px;
+            font-size: 24px;
             font-weight: 700;
             color: #333;
-            letter-spacing: 1px;
+            letter-spacing: 0.8px;
         }
 
-        /* MOBILE */
-        @media (max-width: 600px) {
-            .card {
-                width: 85%;
-                height: 190px;
+        /* ========== MOBILE RESPONSIVE ========== */
+        
+        /* Small tablets and large phones (600px to 768px) */
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 0;
+                font-size: 20px;
             }
-
-            .icon { font-size: 60px; }
-            .text { font-size: 24px; }
-
-            header { font-size: 22px; }
-            footer { font-size: 16px; }
-
+            
+            footer {
+                padding: 10px 0;
+                font-size: 13px;
+            }
+            
             .container {
-                height: calc(100vh - 160px);
+                gap: 20px;
+                padding: 15px;
+                height: calc(100vh - 120px);
+            }
+            
+            .card {
+                width: 250px;
+                height: 220px;
+                margin: 5px;
+            }
+            
+            .icon {
+                font-size: 60px;
+                margin-bottom: 12px;
+            }
+            
+            .text {
+                font-size: 22px;
+            }
+        }
+
+        /* Mobile phones (480px to 600px) */
+        @media (max-width: 600px) {
+            body {
+                padding-top: 65px;
+                padding-bottom: 55px;
+            }
+            
+            header {
+                font-size: 18px;
+                padding: 10px 0;
+            }
+            
+            footer {
+                font-size: 12px;
+                padding: 8px 0;
+            }
+            
+            .container {
+                gap: 15px;
+                padding: 10px;
+                height: calc(100vh - 110px);
+            }
+            
+            .card {
+                width: 90%;
+                max-width: 280px;
+                height: 200px;
+            }
+            
+            .icon {
+                font-size: 55px;
+                margin-bottom: 10px;
+            }
+            
+            .text {
+                font-size: 20px;
+                letter-spacing: 0.5px;
+            }
+            
+            .card:hover {
+                transform: translateY(-5px) scale(1.02);
+            }
+        }
+
+        /* Small mobile phones (below 480px) */
+        @media (max-width: 480px) {
+            header {
+                font-size: 16px;
+                padding: 8px 0;
+            }
+            
+            footer {
+                font-size: 11px;
+                padding: 6px 0;
+            }
+            
+            .container {
+                gap: 12px;
+                padding: 8px;
+                height: calc(100vh - 100px);
+            }
+            
+            .card {
+                width: 92%;
+                height: 190px;
+                border-radius: 18px;
+            }
+            
+            .icon {
+                font-size: 50px;
+                margin-bottom: 8px;
+            }
+            
+            .text {
+                font-size: 18px;
+            }
+            
+            body {
+                padding-top: 60px;
+                padding-bottom: 50px;
+            }
+        }
+
+        /* Very small phones (below 360px) */
+        @media (max-width: 360px) {
+            .card {
+                width: 95%;
+                height: 180px;
+            }
+            
+            .icon {
+                font-size: 45px;
+            }
+            
+            .text {
+                font-size: 17px;
+            }
+            
+            header {
+                font-size: 15px;
+            }
+            
+            .container {
+                gap: 10px;
+            }
+        }
+
+        /* Landscape mode */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .container {
+                flex-direction: row;
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                overflow-y: hidden;
+                height: calc(100vh - 100px);
+                padding-bottom: 5px;
+            }
+            
+            .card {
+                width: 200px;
+                height: 180px;
+                min-width: 200px;
+            }
+            
+            body {
+                padding-top: 60px;
+                padding-bottom: 45px;
             }
         }
     </style>
@@ -144,6 +296,12 @@
         <div class="icon">👥</div>
         <div class="text">Owners</div>
     </div>
+    
+    <!-- NAYA SUMMARY CARD -->
+    <div class="card" id="summaryCard">
+        <div class="icon">📊</div>
+        <div class="text">Summary</div>
+    </div>
 </div>
 
 <!-- FOOTER -->
@@ -164,6 +322,11 @@
 
     document.getElementById("ownersCard").addEventListener("click", () => {
         window.location.href = `owner.html?id=${urlParams.get("id")}&name=${encodeURIComponent(fileName)}`;
+    });
+    
+    // Summary card ka event listener
+    document.getElementById("summaryCard").addEventListener("click", () => {
+        window.location.href = `summary.html?id=${urlParams.get("id")}&name=${encodeURIComponent(fileName)}`;
     });
 </script>
 
