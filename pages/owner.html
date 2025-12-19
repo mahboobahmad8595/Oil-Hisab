@@ -247,6 +247,16 @@
         font-size: 12.5px;
         outline: none;
     }
+/* Oil Sent On date hide until selected */
+.date-input:invalid {
+    color: transparent;
+}
+
+.date-input:not(:invalid) {
+    color: black;
+}
+
+
 </style>
 </head>
 
@@ -273,7 +283,7 @@
             <!-- Top Input Grid -->
             <div class="top-grid">
                 <div><span>Owner:</span><input id="owner-athar" type="text" readonly></div>
-                <div><span>Oil Sent On:</span><input type="text"></div>
+                <div><span>Oil Sent On:</span><input type="date" class="date-input" required></div>
                 <div><span>Oil Usage:</span><input type="text"></div>
                 <div><span>Total Litre:</span><input id="total-athar" type="text" readonly></div>
                 <div><span>Rate:</span><input id="rate-athar" type="text"></div>
