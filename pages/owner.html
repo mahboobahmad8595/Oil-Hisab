@@ -1,595 +1,614 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
- <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Owner</title>
-</body>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Owner</title>
+    </body>
+
 </html>
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-body{
-    font-family: Arial, sans-serif;
-    background:#f4f4f4;
-    display:flex;
-    justify-content:center;
-    padding:12px;
-}
+    body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        padding: 12px;
+    }
 
-.main-box{
-    width:92vw;
-    max-width:470px;
-    background:white;
-    border:2px solid #000;
-    padding:10px;
-    position:relative;
-}
+    .main-box {
+        width: 92vw;
+        max-width: 470px;
+        background: white;
+        border: 2px solid #000;
+        padding: 10px;
+        position: relative;
+    }
 
-/* ========== COMPLETE TABLE FIX ========== */
-.table-container {
-    max-height: 400px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    margin-top: 10px;
-    position: relative;
-}
+    /* ========== COMPLETE TABLE FIX ========== */
+    .table-container {
+        max-height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ccc;
+        margin-top: 10px;
+        position: relative;
+    }
 
-/* Table wrapper for sticky header */
-.table-wrapper {
-    position: relative;
-}
+    /* Table wrapper for sticky header */
+    .table-wrapper {
+        position: relative;
+    }
 
-/* Main table grid */
-.table-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    width: 100%;
-}
+    /* Main table grid */
+    .table-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        width: 100%;
+    }
 
-/* HEADER FIX - Separate styling */
-.header-row {
-    display: contents;
-}
+    /* HEADER FIX - Separate styling */
+    .header-row {
+        display: contents;
+    }
 
-/* MENU */
-.dropdown { 
-    position: absolute; 
-    top: 10px; 
-    right: 10px; 
-    z-index: 1000;
-}
-.dot{
-    width:4px; 
-    height:4px;
-    background:#000;
-    border-radius:50%;
-    display:block;
-    margin:3px 0;
-    cursor:pointer;
-}
-.dropdown-content{
-    display:none;
-    position:absolute;
-    right:0;
-    top:15px;
-    background:#fff;
-    border:1px solid #000;
-    z-index:1001;
-    font-size:12px;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-    min-width: 120px;
-}
-.dropdown-content div{ 
-    padding:8px 12px; 
-    cursor:pointer; 
-    white-space: nowrap;
-}
-.dropdown-content div:hover{ background:#f0f0f0; }
+    /* MENU */
+    .dropdown {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 1000;
+    }
 
-/* PAGES */
-.page { 
-    display:none; 
-    position: relative; 
-    padding-bottom: 20px;
-}
+    .dot {
+        width: 4px;
+        height: 4px;
+        background: #000;
+        border-radius: 50%;
+        display: block;
+        margin: 3px 0;
+        cursor: pointer;
+    }
 
-/* TOP INPUTS */
-.top-grid{
-    display:grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap:14px 10px;
-    margin-bottom:12px;
-}
-.top-grid > div{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-}
-.top-grid span{
-    font-size:13px;
-    font-weight:bold;
-}
-.top-grid input{
-    width:70%;
-    border:none;
-    border-bottom:1.3px solid #000;
-    background:transparent;
-    padding:3px 0;
-    text-align:center;
-    font-size:14px;
-    font-weight:bold;
-    outline:none;
-}
+    .dropdown-content {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: 15px;
+        background: #fff;
+        border: 1px solid #000;
+        z-index: 1001;
+        font-size: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        min-width: 120px;
+    }
 
-/* Simple column width adjustment */
-.table-grid {
-    display: grid;
-    grid-template-columns: 15% 15% 27% 28% 15%; /* ✅ Percentage widths */
-    /* OR */
-    /* grid-template-columns: 70px 50px 100px 100px 70px; Fixed pixels */
-}
+    .dropdown-content div {
+        padding: 8px 12px;
+        cursor: pointer;
+        white-space: nowrap;
+    }
 
-.table-grid .cell {
-    border-right: 2px solid #000;
-    border-bottom: 2px solid #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 12.5px;
-    font-weight: bold;
-    min-height: 30px;
-    padding: 5px 2px;
-    word-break: break-word;
-}
+    .dropdown-content div:hover {
+        background: #f0f0f0;
+    }
 
-.input-cell {
-    background: #fff;
-}
+    /* PAGES */
+    .page {
+        display: none;
+        position: relative;
+        padding-bottom: 20px;
+    }
 
-.table-grid .cell:nth-child(-n+5) {
-    background: #f0f0f0;
-    font-weight: bold;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    border: 2px solid #000 !important;
-    border-bottom: 2px solid #000 !important;
-}
+    /* TOP INPUTS */
+    .top-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px 10px;
+        margin-bottom: 12px;
+    }
 
-/* Regular cells */
-.table-grid .cell {
-    border-right: 2px solid #000;
-    border-bottom: 2px solid #000;
-    border-left: 2px solid #000;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 12.5px;
-    font-weight: bold;
-    min-height: 30px;
-    padding: 5px 2px;
-    word-break: break-word;
-}
+    .top-grid>div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .top-grid span {
+        font-size: 13px;
+        font-weight: bold;
+    }
+
+    .top-grid input {
+        width: 70%;
+        border: none;
+        border-bottom: 1.3px solid #000;
+        background: transparent;
+        padding: 3px 0;
+        text-align: center;
+        font-size: 14px;
+        font-weight: bold;
+        outline: none;
+    }
+
+    /* Simple column width adjustment */
+    .table-grid {
+        display: grid;
+        grid-template-columns: 15% 15% 27% 28% 15%;
+        /* ✅ Percentage widths */
+        /* OR */
+        /* grid-template-columns: 70px 50px 100px 100px 70px; Fixed pixels */
+    }
+
+    .table-grid .cell {
+        border-right: 2px solid #000;
+        border-bottom: 2px solid #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12.5px;
+        font-weight: bold;
+        min-height: 30px;
+        padding: 5px 2px;
+        word-break: break-word;
+    }
+
+    .input-cell {
+        background: #fff;
+    }
+
+    .table-grid .cell:nth-child(-n+5) {
+        background: #f0f0f0;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        border: 2px solid #000 !important;
+        border-bottom: 2px solid #000 !important;
+    }
+
+    /* Regular cells */
+    .table-grid .cell {
+        border-right: 2px solid #000;
+        border-bottom: 2px solid #000;
+        border-left: 2px solid #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12.5px;
+        font-weight: bold;
+        min-height: 30px;
+        padding: 5px 2px;
+        word-break: break-word;
+    }
 
 
-/* Header row styling */
-.table-grid .cell:first-child,
-.table-grid .cell:nth-child(2),
-.table-grid .cell:nth-child(3),
-.table-grid .cell:nth-child(4),
-.table-grid .cell:nth-child(5) {
-    background: #f0f0f0;
-    font-weight: bold;
-    position: sticky;
-    top: 0;
-    z-index: 10;
-}
+    /* Header row styling */
+    .table-grid .cell:first-child,
+    .table-grid .cell:nth-child(2),
+    .table-grid .cell:nth-child(3),
+    .table-grid .cell:nth-child(4),
+    .table-grid .cell:nth-child(5) {
+        background: #f0f0f0;
+        font-weight: bold;
+        position: sticky;
+        top: 0;
+        z-index: 10;
+    }
 
-/* ========== PDF EXPORT BUTTON - BELOW CONTAINER ========== */
-.pdf-btn {
-    display: block;
-    margin: 15px auto 5px auto;
-    background: #dc3545;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 13px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    width: 120px;
-    transition: all 0.3s ease;
-}
+    /* ========== PDF EXPORT BUTTON - BELOW CONTAINER ========== */
+    .pdf-btn {
+        display: block;
+        margin: 15px auto 5px auto;
+        background: #dc3545;
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 120px;
+        transition: all 0.3s ease;
+    }
 
-.pdf-btn:hover {
-    background: #c82333;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-}
+    .pdf-btn:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
 
-.cell{
-    border-right:2px solid #000;
-    border-bottom:2px solid #000;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    font-size:12.5px;
-    font-weight:bold;
-}
-.input-cell input{
-    width:100%;
-    height:100%;
-    border:none;
-    background:transparent;
-    text-align:center;
-    font-size:12.5px;
-    outline:none;
-}
+    .cell {
+        border-right: 2px solid #000;
+        border-bottom: 2px solid #000;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 12.5px;
+        font-weight: bold;
+    }
+
+    .input-cell input {
+        width: 100%;
+        height: 100%;
+        border: none;
+        background: transparent;
+        text-align: center;
+        font-size: 12.5px;
+        outline: none;
+    }
 </style>
 </head>
+
 <body>
 
-<div class="main-box">
+    <div class="main-box">
 
-    <!-- ========== ATHAR PAGE ========== -->
-    <div id="athar" class="page">
-        
-        <!-- Dropdown Menu -->
+        <!-- ========== ATHAR PAGE ========== -->
+        <div id="athar" class="page">
+
+          <!-- Dropdown Menu with unique ID -->
         <div class="dropdown">
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <div class="dropdown-content" id="dropdownMenu">
+            <span class="dot" onclick="toggleDropdown('athar')"></span>
+            <span class="dot" onclick="toggleDropdown('athar')"></span>
+            <span class="dot" onclick="toggleDropdown('athar')"></span>
+            <div class="dropdown-content" id="dropdownMenu-athar">
                 <div onclick="openPage('athar','Athar')">Athar</div>
                 <div onclick="openPage('sabir','Sabir')">Sabir</div>
                 <div onclick="openPage('tahir','Tahir')">Tahir</div>
                 <div onclick="openPage('faisal','Faisal')">Faisal</div>
             </div>
         </div>
-        
-        <!-- Top Input Grid -->
-        <div class="top-grid">
-            <div><span>Owner:</span><input id="owner-athar" type="text" readonly></div>
-            <div><span>Oil Sent On:</span><input type="text"></div>
-            <div><span>Oil Usage:</span><input type="text"></div>
-            <div><span>Total Litre:</span><input id="total-athar" type="text" readonly></div>
-            <div><span>Rate:</span><input id="rate-athar" type="text"></div>
-            <div><span>Amount:</span><input id="amount-athar" type="text" readonly></div>
-        </div>
-        
-        <!-- Scrollable Table Container -->
-        <div class="table-container">
-            <div class="table-grid" id="table-athar">
-                <div class="cell">Memo</div>
-                <div class="cell">Drum</div>
-                <div class="cell">Date</div>
-                <div class="cell">Vehicle</div>
-                <div class="cell">Litre</div>
-                <!-- Rows will be added dynamically here -->
-            </div>
-        </div>
-        
-        <!-- PDF Button -->
-        <button class="pdf-btn" onclick="exportToPDF('athar', 'Athar')">
-            📄 Export PDF
-        </button>
-    </div>
 
-    <!-- ========== SABIR PAGE ========== -->
-    <div id="sabir" class="page">
-        
-        <!-- Dropdown Menu -->
+            <!-- Top Input Grid -->
+            <div class="top-grid">
+                <div><span>Owner:</span><input id="owner-athar" type="text" readonly></div>
+                <div><span>Oil Sent On:</span><input type="text"></div>
+                <div><span>Oil Usage:</span><input type="text"></div>
+                <div><span>Total Litre:</span><input id="total-athar" type="text" readonly></div>
+                <div><span>Rate:</span><input id="rate-athar" type="text"></div>
+                <div><span>Amount:</span><input id="amount-athar" type="text" readonly></div>
+            </div>
+
+            <!-- Scrollable Table Container -->
+            <div class="table-container">
+                <div class="table-grid" id="table-athar">
+                    <div class="cell">Memo</div>
+                    <div class="cell">Drum</div>
+                    <div class="cell">Date</div>
+                    <div class="cell">Vehicle</div>
+                    <div class="cell">Litre</div>
+                    <!-- Rows will be added dynamically here -->
+                </div>
+            </div>
+
+            <!-- PDF Button -->
+            <button class="pdf-btn" onclick="exportToPDF('athar', 'Athar')">
+                📄 Export PDF
+            </button>
+        </div>
+
+        <!-- ========== SABIR PAGE ========== -->
+        <div id="sabir" class="page">
+
+          <!-- Dropdown Menu with unique ID -->
         <div class="dropdown">
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <div class="dropdown-content" id="dropdownMenu">
+            <span class="dot" onclick="toggleDropdown('sabir')"></span>
+            <span class="dot" onclick="toggleDropdown('sabir')"></span>
+            <span class="dot" onclick="toggleDropdown('sabir')"></span>
+            <div class="dropdown-content" id="dropdownMenu-sabir">
                 <div onclick="openPage('athar','Athar')">Athar</div>
                 <div onclick="openPage('sabir','Sabir')">Sabir</div>
                 <div onclick="openPage('tahir','Tahir')">Tahir</div>
                 <div onclick="openPage('faisal','Faisal')">Faisal</div>
             </div>
         </div>
-        
-        <!-- Top Input Grid -->
-        <div class="top-grid">
-            <div><span>Owner:</span><input id="owner-sabir" type="text" readonly></div>
-            <div><span>Oil Sent On:</span><input type="text"></div>
-            <div><span>Oil Usage:</span><input type="text"></div>
-            <div><span>Total Litre:</span><input id="total-sabir" type="text" readonly></div>
-            <div><span>Rate:</span><input id="rate-sabir" type="text"></div>
-            <div><span>Amount:</span><input id="amount-sabir" type="text" readonly></div>
-        </div>
-        
-        <!-- Scrollable Table Container -->
-        <div class="table-container">
-            <div class="table-grid" id="table-sabir">
-                <div class="cell">Memo</div>
-                <div class="cell">Drum</div>
-                <div class="cell">Date</div>
-                <div class="cell">Vehicle</div>
-                <div class="cell">Litre</div>
-                <!-- Rows will be added dynamically here -->
-            </div>
-        </div>
-        
-        <!-- PDF Button -->
-        <button class="pdf-btn" onclick="exportToPDF('sabir', 'Sabir')">
-            📄 Export PDF
-        </button>
-    </div>
 
-    <!-- ========== TAHIR PAGE ========== -->
-    <div id="tahir" class="page">
-        
-        <!-- Dropdown Menu -->
+            <!-- Top Input Grid -->
+            <div class="top-grid">
+                <div><span>Owner:</span><input id="owner-sabir" type="text" readonly></div>
+                <div><span>Oil Sent On:</span><input type="text"></div>
+                <div><span>Oil Usage:</span><input type="text"></div>
+                <div><span>Total Litre:</span><input id="total-sabir" type="text" readonly></div>
+                <div><span>Rate:</span><input id="rate-sabir" type="text"></div>
+                <div><span>Amount:</span><input id="amount-sabir" type="text" readonly></div>
+            </div>
+
+            <!-- Scrollable Table Container -->
+            <div class="table-container">
+                <div class="table-grid" id="table-sabir">
+                    <div class="cell">Memo</div>
+                    <div class="cell">Drum</div>
+                    <div class="cell">Date</div>
+                    <div class="cell">Vehicle</div>
+                    <div class="cell">Litre</div>
+                    <!-- Rows will be added dynamically here -->
+                </div>
+            </div>
+
+            <!-- PDF Button -->
+            <button class="pdf-btn" onclick="exportToPDF('sabir', 'Sabir')">
+                📄 Export PDF
+            </button>
+        </div>
+
+        <!-- ========== TAHIR PAGE ========== -->
+        <div id="tahir" class="page">
+
+  <!-- Dropdown Menu with unique ID -->
         <div class="dropdown">
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <div class="dropdown-content" id="dropdownMenu">
+            <span class="dot" onclick="toggleDropdown('tahir')"></span>
+            <span class="dot" onclick="toggleDropdown('tahir')"></span>
+            <span class="dot" onclick="toggleDropdown('tahir')"></span>
+            <div class="dropdown-content" id="dropdownMenu-tahir">
                 <div onclick="openPage('athar','Athar')">Athar</div>
                 <div onclick="openPage('sabir','Sabir')">Sabir</div>
                 <div onclick="openPage('tahir','Tahir')">Tahir</div>
                 <div onclick="openPage('faisal','Faisal')">Faisal</div>
             </div>
         </div>
-        
-        <!-- Top Input Grid -->
-        <div class="top-grid">
-            <div><span>Owner:</span><input id="owner-tahir" type="text" readonly></div>
-            <div><span>Oil Sent On:</span><input type="text"></div>
-            <div><span>Oil Usage:</span><input type="text"></div>
-            <div><span>Total Litre:</span><input id="total-tahir" type="text" readonly></div>
-            <div><span>Rate:</span><input id="rate-tahir" type="text"></div>
-            <div><span>Amount:</span><input id="amount-tahir" type="text" readonly></div>
-        </div>
-        
-        <!-- Scrollable Table Container -->
-        <div class="table-container">
-            <div class="table-grid" id="table-tahir">
-                <div class="cell">Memo</div>
-                <div class="cell">Drum</div>
-                <div class="cell">Date</div>
-                <div class="cell">Vehicle</div>
-                <div class="cell">Litre</div>
-                <!-- Rows will be added dynamically here -->
-            </div>
-        </div>
-        
-        <!-- PDF Button -->
-        <button class="pdf-btn" onclick="exportToPDF('tahir', 'Tahir')">
-            📄 Export PDF
-        </button>
-    </div>
 
-    <!-- ========== FAISAL PAGE ========== -->
-    <div id="faisal" class="page">
-        
-        <!-- Dropdown Menu -->
+            <!-- Top Input Grid -->
+            <div class="top-grid">
+                <div><span>Owner:</span><input id="owner-tahir" type="text" readonly></div>
+                <div><span>Oil Sent On:</span><input type="text"></div>
+                <div><span>Oil Usage:</span><input type="text"></div>
+                <div><span>Total Litre:</span><input id="total-tahir" type="text" readonly></div>
+                <div><span>Rate:</span><input id="rate-tahir" type="text"></div>
+                <div><span>Amount:</span><input id="amount-tahir" type="text" readonly></div>
+            </div>
+
+            <!-- Scrollable Table Container -->
+            <div class="table-container">
+                <div class="table-grid" id="table-tahir">
+                    <div class="cell">Memo</div>
+                    <div class="cell">Drum</div>
+                    <div class="cell">Date</div>
+                    <div class="cell">Vehicle</div>
+                    <div class="cell">Litre</div>
+                    <!-- Rows will be added dynamically here -->
+                </div>
+            </div>
+
+            <!-- PDF Button -->
+            <button class="pdf-btn" onclick="exportToPDF('tahir', 'Tahir')">
+                📄 Export PDF
+            </button>
+        </div>
+
+        <!-- ========== FAISAL PAGE ========== -->
+        <div id="faisal" class="page">
+
+       <!-- Dropdown Menu with unique ID -->
         <div class="dropdown">
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <span class="dot" onclick="toggleDropdown()"></span>
-            <div class="dropdown-content" id="dropdownMenu">
+            <span class="dot" onclick="toggleDropdown('faisal')"></span>
+            <span class="dot" onclick="toggleDropdown('faisal')"></span>
+            <span class="dot" onclick="toggleDropdown('faisal')"></span>
+            <div class="dropdown-content" id="dropdownMenu-faisal">
                 <div onclick="openPage('athar','Athar')">Athar</div>
                 <div onclick="openPage('sabir','Sabir')">Sabir</div>
                 <div onclick="openPage('tahir','Tahir')">Tahir</div>
                 <div onclick="openPage('faisal','Faisal')">Faisal</div>
             </div>
         </div>
-        
-        <!-- Top Input Grid -->
-        <div class="top-grid">
-            <div><span>Owner:</span><input id="owner-faisal" type="text" readonly></div>
-            <div><span>Oil Sent On:</span><input type="text"></div>
-            <div><span>Oil Usage:</span><input type="text"></div>
-            <div><span>Total Litre:</span><input id="total-faisal" type="text" readonly></div>
-            <div><span>Rate:</span><input id="rate-faisal" type="text"></div>
-            <div><span>Amount:</span><input id="amount-faisal" type="text" readonly></div>
-        </div>
-        
-        <!-- Scrollable Table Container -->
-        <div class="table-container">
-            <div class="table-grid" id="table-faisal">
-                <div class="cell">Memo</div>
-                <div class="cell">Drum</div>
-                <div class="cell">Date</div>
-                <div class="cell">Vehicle</div>
-                <div class="cell">Litre</div>
-                <!-- Rows will be added dynamically here -->
+
+
+            <!-- Top Input Grid -->
+            <div class="top-grid">
+                <div><span>Owner:</span><input id="owner-faisal" type="text" readonly></div>
+                <div><span>Oil Sent On:</span><input type="text"></div>
+                <div><span>Oil Usage:</span><input type="text"></div>
+                <div><span>Total Litre:</span><input id="total-faisal" type="text" readonly></div>
+                <div><span>Rate:</span><input id="rate-faisal" type="text"></div>
+                <div><span>Amount:</span><input id="amount-faisal" type="text" readonly></div>
             </div>
+
+            <!-- Scrollable Table Container -->
+            <div class="table-container">
+                <div class="table-grid" id="table-faisal">
+                    <div class="cell">Memo</div>
+                    <div class="cell">Drum</div>
+                    <div class="cell">Date</div>
+                    <div class="cell">Vehicle</div>
+                    <div class="cell">Litre</div>
+                    <!-- Rows will be added dynamically here -->
+                </div>
+            </div>
+
+            <!-- PDF Button -->
+            <button class="pdf-btn" onclick="exportToPDF('faisal', 'Faisal')">
+                📄 Export PDF
+            </button>
         </div>
-        
-        <!-- PDF Button -->
-        <button class="pdf-btn" onclick="exportToPDF('faisal', 'Faisal')">
-            📄 Export PDF
-        </button>
+
     </div>
 
-</div>
+    <script>
+        /* ========== DATE FORMAT FUNCTION ========== */
+        function formatDateToDDMMYYYY(dateString) {
+            if (!dateString) return "";
 
-<script>
-/* ========== DATE FORMAT FUNCTION ========== */
-function formatDateToDDMMYYYY(dateString) {
-    if (!dateString) return "";
-    
-    const parts = dateString.split('-');
-    if (parts.length === 3) {
-        return `${parts[2]}-${parts[1]}-${parts[0]}`;
-    }
-    return dateString;
-}
-
-/* ========== LOAD OWNER DATA WITH UNLIMITED ROWS ========== */
-function loadOwnerFromOil(ownerName) {
-    const params = new URLSearchParams(window.location.search);
-    const fileID = params.get("id") || "default";
-    const masterKey = `oilOwnerMaster_${fileID}`;
-    
-    const masterData = JSON.parse(localStorage.getItem(masterKey)) || [];
-    const page = document.getElementById(ownerName.toLowerCase());
-    
-    if (!page) {
-        console.error("Page not found for owner:", ownerName);
-        return;
-    }
-    
-    const table = page.querySelector(".table-grid");
-    const ownerId = ownerName.toLowerCase();
-    
-    // Clear existing rows (keep only 5 header cells)
-    while (table.children.length > 5) {
-        table.removeChild(table.lastChild);
-    }
-    
-    // Filter data for this owner
-    const ownerData = masterData.filter(record => 
-        record.owner && record.owner.toLowerCase() === ownerName.toLowerCase()
-    );
-    
-    // Sort by date (newest first)
-    ownerData.sort((a, b) => new Date(b.date) - new Date(a.date));
-    
-    let totalLitre = 0;
-    
-    // Add data rows - UNLIMITED based on data
-    ownerData.forEach(record => {
-        totalLitre += parseFloat(record.litre) || 0;
-        
-        // Format date
-        const formattedDate = formatDateToDDMMYYYY(record.date);
-        
-        // Create row cells
-        const rowData = [
-            record.memo || "",
-            record.drum || "",
-            formattedDate,
-            record.vehicle || "",
-            record.litre || ""
-        ];
-        
-        rowData.forEach(value => {
-            const cell = document.createElement("div");
-            cell.className = "cell input-cell";
-            cell.textContent = value;
-            table.appendChild(cell);
-        });
-    });
-    
-    // Update top grid
-    updateOwnerSummary(ownerId, ownerName, totalLitre, ownerData.length);
-    
-    // Show message if no data
-    if (ownerData.length === 0) {
-        const messageCell = document.createElement("div");
-        messageCell.style.gridColumn = "1 / span 5";
-        messageCell.style.textAlign = "center";
-        messageCell.style.padding = "20px";
-        messageCell.style.color = "#666";
-        messageCell.textContent = `No oil records found for ${ownerName}`;
-        table.appendChild(messageCell);
-    }
-    
-    console.log(`Loaded ${ownerData.length} records for ${ownerName}, Total: ${totalLitre}L`);
-}
-
-/* ========== UPDATE OWNER SUMMARY CALCULATIONS ========== */
-function updateOwnerSummary(ownerId, ownerName, totalLitre, recordCount) {
-    const page = document.getElementById(ownerId);
-    if (!page) return;
-    
-    // Update basic info
-    const ownerInput = page.querySelector('#owner-' + ownerId);
-    if (ownerInput) ownerInput.value = ownerName;
-    
-    const totalInput = page.querySelector('#total-' + ownerId);
-    if (totalInput) totalInput.value = totalLitre.toFixed(2);
-    
-    // Get rate and calculate amount
-    const rateInput = page.querySelector('#rate-' + ownerId);
-    const amountInput = page.querySelector('#amount-' + ownerId);
-    
-    if (rateInput && amountInput) {
-        // Auto-calculate amount when rate changes
-        rateInput.addEventListener('input', function() {
-            const rate = parseFloat(this.value) || 0;
-            const amount = totalLitre * rate;
-            amountInput.value = amount.toFixed(2);
-            saveOwnerRate(ownerId, rate, amount);
-        });
-        
-        // Load saved rate
-        const savedData = JSON.parse(localStorage.getItem(`owner_${ownerId}_rate`)) || {};
-        if (savedData.rate) {
-            rateInput.value = savedData.rate;
-            amountInput.value = (totalLitre * savedData.rate).toFixed(2);
+            const parts = dateString.split('-');
+            if (parts.length === 3) {
+                return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            }
+            return dateString;
         }
-    }
-}
 
-/* ========== SAVE RATE TO LOCALSTORAGE ========== */
-function saveOwnerRate(ownerId, rate, amount) {
-    localStorage.setItem(`owner_${ownerId}_rate`, JSON.stringify({
-        rate: rate,
-        amount: amount,
-        savedAt: new Date().toISOString()
-    }));
-}
+        /* ========== LOAD OWNER DATA WITH UNLIMITED ROWS ========== */
+        function loadOwnerFromOil(ownerName) {
+            const params = new URLSearchParams(window.location.search);
+            const fileID = params.get("id") || "default";
+            const masterKey = `oilOwnerMaster_${fileID}`;
 
+            const masterData = JSON.parse(localStorage.getItem(masterKey)) || [];
+            const page = document.getElementById(ownerName.toLowerCase());
 
-/* ========== PDF EXPORT FUNCTION - CLEAN, MINIMAL SPACE ========== */
-function exportToPDF(ownerId, ownerName) {
-    const params = new URLSearchParams(window.location.search);
-    const fileID = params.get("id") || "default";
-    const masterKey = `oilOwnerMaster_${fileID}`;
-    
-    const masterData = JSON.parse(localStorage.getItem(masterKey)) || [];
-    const ownerData = masterData.filter(record => 
-        record.owner && record.owner.toLowerCase() === ownerName.toLowerCase()
-    );
-    
-    if (ownerData.length === 0) {
-        alert(`No data found for ${ownerName}`);
-        return;
-    }
-    
-    // Sort by date (newest first)
-    ownerData.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
-    
-    // Calculate totals
-    let totalLitre = 0;
-    ownerData.forEach(record => {
-        totalLitre += parseFloat(record.litre) || 0;
-    });
-    
-    // Get rate
-    let rate = 0;
-    try {
-        const rateInput = document.getElementById('rate-' + ownerId);
-        rate = rateInput ? parseFloat(rateInput.value) || 0 : 0;
-    } catch (e) {
-        rate = 0;
-    }
-    
-    // Get date format function
-    const formatDateToDDMMYYYY = window.formatDateToDDMMYYYY || function(dateString) {
-        if (!dateString) return "";
-        const parts = dateString.split('-');
-        if (parts.length === 3) {
-            return `${parts[2]}-${parts[1]}-${parts[0]}`;
+            if (!page) {
+                console.error("Page not found for owner:", ownerName);
+                return;
+            }
+
+            const table = page.querySelector(".table-grid");
+            const ownerId = ownerName.toLowerCase();
+
+            // Clear existing rows (keep only 5 header cells)
+            while (table.children.length > 5) {
+                table.removeChild(table.lastChild);
+            }
+
+            // Filter data for this owner
+            const ownerData = masterData.filter(record =>
+                record.owner && record.owner.toLowerCase() === ownerName.toLowerCase()
+            );
+
+            // Sort by date (newest first)
+            ownerData.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            let totalLitre = 0;
+
+            // Add data rows - UNLIMITED based on data
+            ownerData.forEach(record => {
+                totalLitre += parseFloat(record.litre) || 0;
+
+                // Format date
+                const formattedDate = formatDateToDDMMYYYY(record.date);
+
+                // Create row cells
+                const rowData = [
+                    record.memo || "",
+                    record.drum || "",
+                    formattedDate,
+                    record.vehicle || "",
+                    record.litre || ""
+                ];
+
+                rowData.forEach(value => {
+                    const cell = document.createElement("div");
+                    cell.className = "cell input-cell";
+                    cell.textContent = value;
+                    table.appendChild(cell);
+                });
+            });
+
+            // Update top grid
+            updateOwnerSummary(ownerId, ownerName, totalLitre, ownerData.length);
+
+            // Show message if no data
+            if (ownerData.length === 0) {
+                const messageCell = document.createElement("div");
+                messageCell.style.gridColumn = "1 / span 5";
+                messageCell.style.textAlign = "center";
+                messageCell.style.padding = "20px";
+                messageCell.style.color = "#666";
+                messageCell.textContent = `No oil records found for ${ownerName}`;
+                table.appendChild(messageCell);
+            }
+
+            console.log(`Loaded ${ownerData.length} records for ${ownerName}, Total: ${totalLitre}L`);
         }
-        return dateString;
-    };
-    
-    // Create HTML content for PDF
-    const printContent = document.createElement('div');
-    printContent.innerHTML = `
+
+        /* ========== UPDATE OWNER SUMMARY CALCULATIONS ========== */
+        function updateOwnerSummary(ownerId, ownerName, totalLitre, recordCount) {
+            const page = document.getElementById(ownerId);
+            if (!page) return;
+
+            // Update basic info
+            const ownerInput = page.querySelector('#owner-' + ownerId);
+            if (ownerInput) ownerInput.value = ownerName;
+
+            const totalInput = page.querySelector('#total-' + ownerId);
+            if (totalInput) totalInput.value = totalLitre.toFixed(2);
+
+            // Get rate and calculate amount
+            const rateInput = page.querySelector('#rate-' + ownerId);
+            const amountInput = page.querySelector('#amount-' + ownerId);
+
+            if (rateInput && amountInput) {
+                // Auto-calculate amount when rate changes
+                rateInput.addEventListener('input', function () {
+                    const rate = parseFloat(this.value) || 0;
+                    const amount = totalLitre * rate;
+                    amountInput.value = amount.toFixed(2);
+                    saveOwnerRate(ownerId, rate, amount);
+                });
+
+                // Load saved rate
+                const savedData = JSON.parse(localStorage.getItem(`owner_${ownerId}_rate`)) || {};
+                if (savedData.rate) {
+                    rateInput.value = savedData.rate;
+                    amountInput.value = (totalLitre * savedData.rate).toFixed(2);
+                }
+            }
+        }
+
+        /* ========== SAVE RATE TO LOCALSTORAGE ========== */
+        function saveOwnerRate(ownerId, rate, amount) {
+            localStorage.setItem(`owner_${ownerId}_rate`, JSON.stringify({
+                rate: rate,
+                amount: amount,
+                savedAt: new Date().toISOString()
+            }));
+        }
+
+
+        /* ========== PDF EXPORT FUNCTION - CLEAN, MINIMAL SPACE ========== */
+        function exportToPDF(ownerId, ownerName) {
+            const params = new URLSearchParams(window.location.search);
+            const fileID = params.get("id") || "default";
+            const masterKey = `oilOwnerMaster_${fileID}`;
+
+            const masterData = JSON.parse(localStorage.getItem(masterKey)) || [];
+            const ownerData = masterData.filter(record =>
+                record.owner && record.owner.toLowerCase() === ownerName.toLowerCase()
+            );
+
+            if (ownerData.length === 0) {
+                alert(`No data found for ${ownerName}`);
+                return;
+            }
+
+            // Sort by date (newest first)
+            ownerData.sort((a, b) => new Date(b.date || 0) - new Date(a.date || 0));
+
+            // Calculate totals
+            let totalLitre = 0;
+            ownerData.forEach(record => {
+                totalLitre += parseFloat(record.litre) || 0;
+            });
+
+            // Get rate
+            let rate = 0;
+            try {
+                const rateInput = document.getElementById('rate-' + ownerId);
+                rate = rateInput ? parseFloat(rateInput.value) || 0 : 0;
+            } catch (e) {
+                rate = 0;
+            }
+
+            // Get date format function
+            const formatDateToDDMMYYYY = window.formatDateToDDMMYYYY || function (dateString) {
+                if (!dateString) return "";
+                const parts = dateString.split('-');
+                if (parts.length === 3) {
+                    return `${parts[2]}-${parts[1]}-${parts[0]}`;
+                }
+                return dateString;
+            };
+
+            // Create HTML content for PDF
+            const printContent = document.createElement('div');
+            printContent.innerHTML = `
         <div class="pdf-container" style="
             width: 100%;
             max-width: 470px;
@@ -784,8 +803,8 @@ function exportToPDF(ownerId, ownerName) {
                     
                     <!-- Data Rows -->
                     ${ownerData.map(record => {
-                        const formattedDate = formatDateToDDMMYYYY(record.date);
-                        return `
+                const formattedDate = formatDateToDDMMYYYY(record.date);
+                return `
                         <div class="cell" style="
                             border-right: 2px solid #000;
                             border-bottom: 2px solid #000;
@@ -847,7 +866,7 @@ function exportToPDF(ownerId, ownerName) {
                             text-align: center;
                         ">${parseFloat(record.litre || 0).toFixed(2)}</div>
                         `;
-                    }).join('')}
+            }).join('')}
                 </div>
             </div>
             
@@ -865,22 +884,22 @@ function exportToPDF(ownerId, ownerName) {
             </div>
         </div>
     `;
-    
-    // Create a hidden iframe for printing
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'absolute';
-    iframe.style.width = '0';
-    iframe.style.height = '0';
-    iframe.style.border = 'none';
-    iframe.style.visibility = 'hidden';
-    
-    document.body.appendChild(iframe);
-    
-    const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-    
-    // Write minimal HTML with proper print styles
-    iframeDoc.open();
-    iframeDoc.write(`
+
+            // Create a hidden iframe for printing
+            const iframe = document.createElement('iframe');
+            iframe.style.position = 'absolute';
+            iframe.style.width = '0';
+            iframe.style.height = '0';
+            iframe.style.border = 'none';
+            iframe.style.visibility = 'hidden';
+
+            document.body.appendChild(iframe);
+
+            const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+
+            // Write minimal HTML with proper print styles
+            iframeDoc.open();
+            iframeDoc.write(`
         <!DOCTYPE html>
         <html>
         <head>
@@ -935,28 +954,36 @@ function exportToPDF(ownerId, ownerName) {
         </body>
         </html>
     `);
-    iframeDoc.close();
-    
-    // Auto print after a short delay
-    setTimeout(() => {
-        iframe.contentWindow.focus();
-        iframe.contentWindow.print();
-        
-        // Clean up after printing
-        setTimeout(() => {
-            document.body.removeChild(iframe);
-        }, 1000);
-    }, 500);
+            iframeDoc.close();
+
+            // Auto print after a short delay
+            setTimeout(() => {
+                iframe.contentWindow.focus();
+                iframe.contentWindow.print();
+
+                // Clean up after printing
+                setTimeout(() => {
+                    document.body.removeChild(iframe);
+                }, 1000);
+            }, 500);
+        }
+
+        /* ========== UPDATED DROPDOWN FUNCTIONS ========== */
+
+// Toggle specific dropdown by owner ID
+function toggleDropdown(ownerId) {
+    const menu = document.getElementById("dropdownMenu-" + ownerId);
+    if (menu) {
+        menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
 }
 
-/* ========== DROPDOWN MENU ========== */
-function toggleDropdown() {
-    const menu = document.getElementById("dropdownMenu");
-    menu.style.display = menu.style.display === "block" ? "none" : "block";
-}
-
+// Open page and hide current dropdown
 function openPage(id, ownerName) {
-    document.getElementById("dropdownMenu").style.display = "none";
+    // Hide all dropdowns first
+    document.querySelectorAll(".dropdown-content").forEach(menu => {
+        menu.style.display = "none";
+    });
     
     // Hide all pages
     document.querySelectorAll(".page").forEach(p => p.style.display = "none");
@@ -976,95 +1003,109 @@ function openPage(id, ownerName) {
 // Close dropdown when clicking outside
 window.onclick = function(e) {
     if (!e.target.closest(".dropdown")) {
-        document.getElementById("dropdownMenu").style.display = "none";
+        document.querySelectorAll(".dropdown-content").forEach(menu => {
+            menu.style.display = "none";
+        });
     }
 }
 
-/* ========== REAL-TIME UPDATES ========== */
-function setupRealTimeListener() {
-    const params = new URLSearchParams(window.location.search);
-    const fileID = params.get("id") || "default";
-    const masterKey = `oilOwnerMaster_${fileID}`;
+/* ========== DATE FORMAT FUNCTION ========== */
+function formatDateToDDMMYYYY(dateString) {
+    if (!dateString) return "";
     
-    // Listen for storage changes
-    window.addEventListener('storage', function(e) {
-        if (e.key === masterKey) {
-            // Reload data for active owner
-            const activePages = document.querySelectorAll('.page');
-            let activeOwner = null;
-            
-            activePages.forEach(page => {
-                if (page.style.display === 'block') {
-                    activeOwner = page.id;
+    const parts = dateString.split('-');
+    if (parts.length === 3) {
+        return `${parts[2]}-${parts[1]}-${parts[0]}`;
+    }
+    return dateString;
+}
+
+        /* ========== REAL-TIME UPDATES ========== */
+        function setupRealTimeListener() {
+            const params = new URLSearchParams(window.location.search);
+            const fileID = params.get("id") || "default";
+            const masterKey = `oilOwnerMaster_${fileID}`;
+
+            // Listen for storage changes
+            window.addEventListener('storage', function (e) {
+                if (e.key === masterKey) {
+                    // Reload data for active owner
+                    const activePages = document.querySelectorAll('.page');
+                    let activeOwner = null;
+
+                    activePages.forEach(page => {
+                        if (page.style.display === 'block') {
+                            activeOwner = page.id;
+                        }
+                    });
+
+                    if (activeOwner) {
+                        const ownerName = activeOwner.charAt(0).toUpperCase() + activeOwner.slice(1);
+                        loadOwnerFromOil(ownerName);
+                    }
                 }
             });
-            
-            if (activeOwner) {
-                const ownerName = activeOwner.charAt(0).toUpperCase() + activeOwner.slice(1);
-                loadOwnerFromOil(ownerName);
-            }
+
+            // Auto-refresh every 3 seconds
+            setInterval(() => {
+                const activePages = document.querySelectorAll('.page');
+                let activeOwner = null;
+
+                activePages.forEach(page => {
+                    if (page.style.display === 'block') {
+                        activeOwner = page.id;
+                    }
+                });
+
+                if (activeOwner) {
+                    const ownerName = activeOwner.charAt(0).toUpperCase() + activeOwner.slice(1);
+                    loadOwnerFromOil(ownerName);
+                }
+            }, 3000);
         }
-    });
-    
-    // Auto-refresh every 3 seconds
-    setInterval(() => {
-        const activePages = document.querySelectorAll('.page');
-        let activeOwner = null;
-        
-        activePages.forEach(page => {
-            if (page.style.display === 'block') {
-                activeOwner = page.id;
-            }
+
+        /* ========== AUTO-SAVE FOR OIL SENT/USAGE ========== */
+        function setupOilInputsAutoSave() {
+            // Har owner page ke liye
+            ['athar', 'sabir', 'tahir', 'faisal'].forEach(ownerId => {
+                const page = document.getElementById(ownerId);
+                if (!page) return;
+
+                // Oil Sent On input (2nd input)
+                const oilSentInput = page.querySelectorAll('.top-grid input')[1];
+                // Oil Usage input (3rd input)
+                const oilUsageInput = page.querySelectorAll('.top-grid input')[2];
+
+                // Save on input
+                if (oilSentInput) {
+                    oilSentInput.addEventListener('input', function () {
+                        localStorage.setItem(`oil_sent_${ownerId}`, this.value);
+                    });
+                    // Load saved value
+                    oilSentInput.value = localStorage.getItem(`oil_sent_${ownerId}`) || '';
+                }
+
+                if (oilUsageInput) {
+                    oilUsageInput.addEventListener('input', function () {
+                        localStorage.setItem(`oil_usage_${ownerId}`, this.value);
+                    });
+                    // Load saved value
+                    oilUsageInput.value = localStorage.getItem(`oil_usage_${ownerId}`) || '';
+                }
+            });
+        }
+
+        window.addEventListener('DOMContentLoaded', function () {
+            setupRealTimeListener();
+
+            // ✅ YEH LINE ADD KARO:
+            setupOilInputsAutoSave(); // Oil Sent/Usage save/load
+
+            // Open default page (Athar)
+            openPage("athar", "Athar");
         });
-        
-        if (activeOwner) {
-            const ownerName = activeOwner.charAt(0).toUpperCase() + activeOwner.slice(1);
-            loadOwnerFromOil(ownerName);
-        }
-    }, 3000);
-}
-
-/* ========== AUTO-SAVE FOR OIL SENT/USAGE ========== */
-function setupOilInputsAutoSave() {
-    // Har owner page ke liye
-    ['athar', 'sabir', 'tahir', 'faisal'].forEach(ownerId => {
-        const page = document.getElementById(ownerId);
-        if (!page) return;
-        
-        // Oil Sent On input (2nd input)
-        const oilSentInput = page.querySelectorAll('.top-grid input')[1];
-        // Oil Usage input (3rd input)
-        const oilUsageInput = page.querySelectorAll('.top-grid input')[2];
-        
-        // Save on input
-        if (oilSentInput) {
-            oilSentInput.addEventListener('input', function() {
-                localStorage.setItem(`oil_sent_${ownerId}`, this.value);
-            });
-            // Load saved value
-            oilSentInput.value = localStorage.getItem(`oil_sent_${ownerId}`) || '';
-        }
-        
-        if (oilUsageInput) {
-            oilUsageInput.addEventListener('input', function() {
-                localStorage.setItem(`oil_usage_${ownerId}`, this.value);
-            });
-            // Load saved value
-            oilUsageInput.value = localStorage.getItem(`oil_usage_${ownerId}`) || '';
-        }
-    });
-}
-
-window.addEventListener('DOMContentLoaded', function() {
-    setupRealTimeListener();
-    
-    // ✅ YEH LINE ADD KARO:
-    setupOilInputsAutoSave(); // Oil Sent/Usage save/load
-    
-    // Open default page (Athar)
-    openPage("athar", "Athar");
-});
-</script>
+    </script>
 
 </body>
+
 </html>
