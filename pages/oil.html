@@ -240,7 +240,7 @@ const fileID = params.get("id") || "default";
 let currentDrum = 1;
 
 /* ------------------------------
-  1️⃣ Vehicle Owners & Default Litres
+  1️⃣ Vehicle Owners & Default Litres - SORTED
 --------------------------------*/
 const ownerData = {
     "Sabir": ["085-TML","695-TLP","766-TLB","930-TLT","2134-JU","7617-JU","7884-JU","9394-JU","9895-JU","9057-JV"],
@@ -249,19 +249,26 @@ const ownerData = {
     "Tahir": ["365-TLT","998-TLH","3606-JU"]
 };
 
-// ✅ VEHICLE-LITRE MAPPING
+// ✅ Sort each owner's vehicles
+for (let owner in ownerData) {
+    ownerData[owner].sort();
+}
+
 const vehicleLitreMap = {
     // 14 Litre vehicles
-    "085-TML": 14, "348-SPA": 14, "365-TLT": 14, "695-TLP": 14,
-    "766-TLB": 14, "793-TLL": 14, "826-TLG": 14, "930-TLT": 14,
-    "948-TMK": 14, "3606-JU": 14, "3820-LES": 14, "7617-JU": 14,
-    "7884-JU": 14, "9057-JV": 14, "314-TLJ": 14,
+    "085-TML": 14, "314-TLJ": 14, "348-SPA": 14, "365-TLT": 14,
+    "695-TLP": 14, "766-TLB": 14, "793-TLL": 14, "826-TLG": 14,
+    "930-TLT": 14, "948-TMK": 14, "3606-JU": 14, "3820-LES": 14,
+    "7617-JU": 14, "7884-JU": 14, "9057-JV": 14,
     
     // 15 Litre vehicles
-    "998-TLH": 15, "2134-JU": 15, "9394-JU": 15, "9895-JU": 15,
+    "2134-JU": 15, "9394-JU": 15, "9895-JU": 15, "998-TLH": 15,
     
     // 16 Litre vehicles
-    "494-TLD": 16, "409-TLB": 16,
+    "409-TLB": 16, "494-TLD": 16,
+    
+    // Other vehicles (no default litre)
+    "158-TLY": 0,
 };
 
 const vehicleOwner = {};
@@ -270,22 +277,39 @@ for (let owner in ownerData) {
 }
 
 /* ------------------------------
-  2️⃣ Build Grid
+  2️⃣ Build Grid with SORTED vehicles (FIXED)
 --------------------------------*/
 const grid = document.querySelector(".grid");
+
+// Collect ALL vehicles and sort
+const allVehiclesSet = new Set();
+
+// From ownerData
+for (let owner in ownerData) {
+    ownerData[owner].forEach(v => allVehiclesSet.add(v));
+}
+
+// From vehicleLitreMap (in case some are missing in ownerData)
+for (let vehicle in vehicleLitreMap) {
+    allVehiclesSet.add(vehicle);
+}
+
+// Convert to array and sort
+const sortedVehicles = Array.from(allVehiclesSet);
+sortedVehicles.sort();
+
+// Build grid
 for (let i = 0; i < 16; i++) {
     grid.insertAdjacentHTML("beforeend", `
         <div class="cell"><input type="date" class="date-input" required></div>
         <div class="cell">
             <select onchange="setOwner(this)">
                 <option value="" disabled selected hidden></option>
-                ${Object.keys(vehicleOwner).map(v => `<option>${v}</option>`).join("")}
+                ${sortedVehicles.map(v => `<option value="${v}">${v}</option>`).join("")}
             </select>
         </div>
         <div class="cell owner"></div>
-        <div class="cell">
-            <input type="number" class="litre-input" min="0" oninput="updateTotalLitre()">
-        </div>
+        <div class="cell"><input type="number" class="litre-input" min="0" oninput="updateTotalLitre()"></div>
     `);
 }
 
@@ -301,8 +325,8 @@ function setOwner(selectBox) {
     const owner = vehicleOwner[vehicle] || "";
     ownerCell.textContent = owner;
     
-    // ✅ AUTO SET LITRE
-    if (vehicle && vehicleLitreMap[vehicle]) {
+    // ✅ AUTO SET LITRE (FIXED)
+    if (vehicle && vehicleLitreMap[vehicle] !== undefined) {
         litreInput.value = vehicleLitreMap[vehicle];
     } else if (vehicle) {
         litreInput.value = "";
@@ -314,20 +338,6 @@ function setOwner(selectBox) {
     // Save to storage
     saveToStorage();
 }
-
-/* ------------------------------
-  4️⃣ Total Litre
---------------------------------*/
-function updateTotalLitre() {
-    let total = 0;
-    document.querySelectorAll(".litre-input").forEach(input => {
-        const val = parseFloat(input.value);
-        if (!isNaN(val)) total += val;
-    });
-    document.getElementById("totalLitreBox").value = total;
-    saveToStorage();
-}
-
 /* ------------------------------
   5️⃣ Save / Load Full Drum
 --------------------------------*/
