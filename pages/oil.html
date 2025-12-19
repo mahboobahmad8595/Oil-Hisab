@@ -338,6 +338,20 @@ function setOwner(selectBox) {
     // Save to storage
     saveToStorage();
 }
+
+/* ------------------------------
+  4️⃣ Total Litre
+--------------------------------*/
+function updateTotalLitre() {
+    let total = 0;
+    document.querySelectorAll(".litre-input").forEach(input => {
+        const val = parseFloat(input.value);
+        if (!isNaN(val)) total += val;
+    });
+    document.getElementById("totalLitreBox").value = total;
+    saveToStorage();
+}
+
 /* ------------------------------
   5️⃣ Save / Load Full Drum
 --------------------------------*/
