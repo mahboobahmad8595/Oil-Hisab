@@ -1081,16 +1081,12 @@ function formatDateToDDMMYYYY(dateString) {
                     oilSentInput.addEventListener('input', function () {
                         localStorage.setItem(`oil_sent_${ownerId}`, this.value);
                     });
-                    // Load saved value
-                    oilSentInput.value = localStorage.getItem(`oil_sent_${ownerId}`) || '';
                 }
 
                 if (oilUsageInput) {
                     oilUsageInput.addEventListener('input', function () {
                         localStorage.setItem(`oil_usage_${ownerId}`, this.value);
                     });
-                    // Load saved value
-                    oilUsageInput.value = localStorage.getItem(`oil_usage_${ownerId}`) || '';
                 }
             });
         }
