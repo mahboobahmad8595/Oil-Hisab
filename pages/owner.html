@@ -248,7 +248,6 @@
         outline: none;
     }
 
-
 </style>
 </head>
 
@@ -947,6 +946,30 @@ const oilUsage = localStorage.getItem(`oil_usage_${ownerId}`) || "";
                         border: 1px solid #000 !important;
                         margin: 0 auto !important;
                     }
+
+                    @media print {
+
+    /* Scroll hata do */
+    .table-container {
+        max-height: none !important;
+        overflow: visible !important;
+    }
+
+    /* Sticky header disable */
+    .table-grid .cell {
+        position: static !important;
+    }
+
+    /* Page break allow */
+    .table-grid {
+        page-break-inside: auto !important;
+    }
+
+    .cell {
+        page-break-inside: avoid !important;
+    }
+}
+
                 }
             </style>
         </head>
