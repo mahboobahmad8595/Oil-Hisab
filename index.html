@@ -4,6 +4,9 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Oil Hisab</title>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+
 
 <style>
 body {
@@ -95,17 +98,129 @@ body {
 </div>
 
 <script>
+
+const firebaseConfig = {
+  apiKey: "AIzaSyA4_2-SVgh73vmIQI0YBhSNdh4MFd0F7No",
+  authDomain: "oil-hisab.firebaseapp.com",
+  databaseURL: "https://oil-hisab-default-rtdb.firebaseio.com",
+  projectId: "oil-hisab",
+  storageBucket: "oil-hisab.appspot.com",
+  messagingSenderId: "170082816384",
+  appId: "1:170082816384:web:29e99b4ed0f5147e66f165"
+};
+
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+function saveCardToFirebase(id, title) {
+    database.ref("cards/" + id).set({
+        title: title
+    });
+}
+
+
+function loadCardsFromFirebase() {
+    database.ref("cards").on("value", snapshot => {
+        cardsContainer.innerHTML = "";
+
+        const data = snapshot.val() || {};
+        Object.keys(data).forEach(id => {
+            createCard(id, data[id].title);
+        });
+    });
+}
+
+
+// Function to save owner record
+function saveRecord(ownerName, record) {
+    const ownerKey = ownerName.toLowerCase();
+    const newRef = database.ref(`owners/${ownerKey}`).push();
+    newRef.set(record);
+}
+
+// Function to listen for owner data changes
+function listenOwnerData(ownerName, callback) {
+    const ownerKey = ownerName.toLowerCase();
+    const ref = database.ref(`owners/${ownerKey}`);
+    ref.on('value', snapshot => {
+        const data = snapshot.val() || {};
+        // Convert object to array
+        const records = Object.values(data);
+        callback(records);
+    });
+}
+
 const addNewBtn = document.getElementById("addNewBtn");
 const cardsContainer = document.getElementById("cardsContainer");
 
-window.onload = loadCardsFromStorage;
+window.onload = loadCardsFromFirebase;
+
 
 // ADD NEW CARD
 addNewBtn.addEventListener("click", () => {
     let id = Date.now();
     createCard(id, "New File");
-    saveCardsToStorage();
+saveCardToFirebase(id, "New File");
+
 });
+
+function loadOwnerFromOil(ownerName) {
+    const page = document.getElementById(ownerName.toLowerCase());
+    const table = page.querySelector(".table-grid");
+
+    // Clear table rows
+    while (table.children.length > 5) table.removeChild(table.lastChild);
+
+    listenOwnerData(ownerName, ownerData => {
+        let totalLitre = 0;
+
+        ownerData.forEach(record => {
+            totalLitre += parseFloat(record.litre || 0);
+
+            const formattedDate = formatDateToDDMMYYYY(record.date);
+            const rowData = [
+                record.memo || "",
+                record.drum || "",
+                formattedDate,
+                record.vehicle || "",
+                record.litre || ""
+            ];
+
+            rowData.forEach(value => {
+                const cell = document.createElement("div");
+                cell.className = "cell input-cell";
+                cell.textContent = value;
+                table.appendChild(cell);
+            });
+        });
+
+        updateOwnerSummary(ownerName.toLowerCase(), ownerName, totalLitre, ownerData.length);
+
+        if (ownerData.length === 0) {
+            const messageCell = document.createElement("div");
+            messageCell.style.gridColumn = "1 / span 5";
+            messageCell.style.textAlign = "center";
+            messageCell.style.padding = "20px";
+            messageCell.style.color = "#666";
+            messageCell.textContent = `No oil records found for ${ownerName}`;
+            table.appendChild(messageCell);
+        }
+    });
+}
+
+function addNewEntry(ownerName, memo, drum, date, vehicle, litre) {
+    const record = {
+        memo,
+        drum,
+        date,
+        vehicle,
+        litre
+    };
+    saveRecord(ownerName, record);
+}
+
 
 // CREATE CARD
 function createCard(id, titleText) {
@@ -125,20 +240,21 @@ function createCard(id, titleText) {
         const cardName = encodeURIComponent(card.querySelector(".card-title").textContent);
 
         // Agar card title 'Owner' ho → owner.html
-        if (titleText.toLowerCase() === "owner") {
-            window.location.href = `pages/owner.html?id=${id}&name=${cardName}`;
-        } 
-        // Agar card title 'Oil' ho → oil.html
-        else if (titleText.toLowerCase() === "oil") {
-            window.location.href = `pages/oil.html?id=${id}&name=${cardName}`;
-        } 
-        else if (titleText.toLowerCase() === "summary") {  // ✅ YEH ADD KARO
-        window.location.href = `pages/summary.html?id=${id}&name=${cardName}`;
-    }
-        // Default → dashboard.html
-        else {
-            window.location.href = `pages/dashboard.html?id=${id}&name=${cardName}`;
-        }
+        const currentTitle = card.querySelector(".card-title").textContent.toLowerCase();
+
+if (currentTitle === "owner") {
+    window.location.href = `pages/owner.html?id=${id}&name=${cardName}`;
+}
+else if (currentTitle === "oil") {
+    window.location.href = `pages/oil.html?id=${id}&name=${cardName}`;
+}
+else if (currentTitle === "summary") {
+    window.location.href = `pages/summary.html?id=${id}&name=${cardName}`;
+}
+else {
+    window.location.href = `pages/dashboard.html?id=${id}&name=${cardName}`;
+}
+
     });
 
     // MENU BUTTON
@@ -165,10 +281,11 @@ function createCard(id, titleText) {
     deleteOption.className = "menu-item";
     deleteOption.textContent = "Delete";
 
-    deleteOption.addEventListener("click", () => {
-        card.remove();
-        saveCardsToStorage();
-    });
+   deleteOption.addEventListener("click", () => {
+    card.remove();
+    database.ref("cards/" + id).remove();
+});
+
 
     menuPopup.appendChild(renameOption);
     menuPopup.appendChild(deleteOption);
@@ -228,25 +345,14 @@ function restoreTitle(input, id) {
 
     input.replaceWith(title);
 
-    saveCardsToStorage();
+    
+    saveCardToFirebase(id, newTitle);
+
 }
 
-// SAVE TO STORAGE
-function saveCardsToStorage() {
-    const cards = [];
-    document.querySelectorAll(".card").forEach(card => {
-        const id = card.getAttribute("data-id");
-        const title = card.querySelector(".card-title").textContent;
-        cards.push({ id, title });
-    });
-    localStorage.setItem("cards", JSON.stringify(cards));
-}
 
-// LOAD CARDS
-function loadCardsFromStorage() {
-    const saved = JSON.parse(localStorage.getItem("cards")) || [];
-    saved.forEach(card => createCard(card.id, card.title));
-}
+
+
 </script>
 
 </body>
